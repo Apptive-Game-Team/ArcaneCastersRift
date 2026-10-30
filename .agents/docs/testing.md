@@ -34,7 +34,7 @@ CLI 린터·포매터도 없다.
 
 - Low risk (문서, 주석, 단일 상수): 컴파일 확인
 - Medium risk (한 시스템 내 동작 변경): 해당 씬 Play Mode 검증
-- High risk (플레이어/전투/씬 전환/서브모듈 핀/CI): 씬 전환 왕복 검증 + CI 빌드
+- High risk (플레이어/전투/씬 전환/대량 아트 변경/CI): 씬 전환 왕복 검증 + CI 빌드
   통과 확인 + 롤백 방법 명시
 
 ## Unity-Specific Checks
@@ -62,3 +62,7 @@ PR과 핸드오프에는 아래를 적는다:
 - 결과
 - 건너뛴 검증과 이유
 - 남은 리스크
+
+## Arcane Casters 첫 구간
+
+프로젝트 전용 Play Mode 검사기는 Assets/Editor/ArcaneCasters/ArcanePlayModeVerification.cs의 Run이다. 명령과 검사 범위는 루트 README.md를 따른다. 테스트 어셈블리의 단위 테스트로 표현하지 않는다. Windows 빌드 명령은 ArcaneProjectBuilder.BuildWindows이다.

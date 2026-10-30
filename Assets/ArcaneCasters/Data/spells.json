@@ -1,0 +1,272 @@
+{
+  "spells": [
+    {
+      "name": "마력탄",
+      "role": "기본 공격",
+      "color": "#a8cbd9",
+      "innate": true,
+      "source": "처음부터 사용 가능",
+      "description": "조준 방향으로 빠르게 발사합니다. 마력을 소모하지 않습니다.",
+      "upgrade": [
+        "피해와 탄속 증가",
+        "한 대상을 더 관통"
+      ],
+      "levels": [
+        {
+          "damage": 28,
+          "cooldown": 0.3,
+          "cost": 0,
+          "speed": 6.6,
+          "pierce": 0
+        },
+        {
+          "damage": 35,
+          "cooldown": 0.28,
+          "cost": 0,
+          "speed": 7.6,
+          "pierce": 0
+        },
+        {
+          "damage": 43,
+          "cooldown": 0.26,
+          "cost": 0,
+          "speed": 8.2,
+          "pierce": 1
+        }
+      ],
+      "id": "bolt"
+    },
+    {
+      "name": "돌 골렘",
+      "role": "소환 · 전열 유지",
+      "color": "#c3bd99",
+      "source": "처음부터 사용 가능",
+      "description": "골렘이 가까운 적을 붙잡고 공격합니다. 방패를 든 적의 시선을 돌릴 수 있습니다.",
+      "upgrade": [
+        "생명력과 공격력 증가",
+        "주변 타격의 범위와 피해 증가"
+      ],
+      "levels": [
+        {
+          "damage": 36,
+          "health": 150,
+          "duration": 18,
+          "cooldown": 7,
+          "cost": 30,
+          "splash": 0.65,
+          "splashDamage": 12
+        },
+        {
+          "damage": 47,
+          "health": 210,
+          "duration": 22,
+          "cooldown": 6.5,
+          "cost": 30,
+          "splash": 0.65,
+          "splashDamage": 16
+        },
+        {
+          "damage": 60,
+          "health": 280,
+          "duration": 26,
+          "cooldown": 6,
+          "cost": 30,
+          "splash": 1.05,
+          "splashDamage": 32
+        }
+      ],
+      "id": "summon"
+    },
+    {
+      "name": "낙뢰",
+      "role": "범위 공격 · 시전 중단",
+      "color": "#d7c998",
+      "source": "세계수 오르막의 침입자 제압",
+      "description": "조준 지점에 번개를 내려 공격 준비를 끊습니다. 둔화된 적에게 피해가 25% 증가합니다.",
+      "upgrade": [
+        "범위 증가 · 인접한 적 1회 연쇄",
+        "최대 2회 연쇄"
+      ],
+      "levels": [
+        {
+          "damage": 80,
+          "radius": 1.55,
+          "stun": 0.75,
+          "cooldown": 8,
+          "cost": 25,
+          "chains": 0
+        },
+        {
+          "damage": 110,
+          "radius": 1.75,
+          "stun": 0.95,
+          "cooldown": 7.5,
+          "cost": 27,
+          "chains": 1
+        },
+        {
+          "damage": 145,
+          "radius": 1.95,
+          "stun": 1.1,
+          "cooldown": 7,
+          "cost": 30,
+          "chains": 2
+        }
+      ],
+      "id": "nova"
+    },
+    {
+      "name": "빙결창",
+      "role": "관통 공격 · 둔화",
+      "color": "#9fcfd5",
+      "source": "정령의 개울 조사",
+      "description": "일직선의 적을 관통하고 이동을 늦춥니다. 둔화된 적에게 낙뢰를 이어 쓰면 효과적입니다.",
+      "upgrade": [
+        "더 강한 둔화 · 관통 대상 증가",
+        "짧게 얼려 공격 준비를 중단"
+      ],
+      "levels": [
+        {
+          "damage": 55,
+          "slow": 0.45,
+          "duration": 2,
+          "pierce": 2,
+          "cooldown": 5,
+          "cost": 18,
+          "speed": 8.3,
+          "freeze": 0
+        },
+        {
+          "damage": 74,
+          "slow": 0.55,
+          "duration": 2.6,
+          "pierce": 3,
+          "cooldown": 4.8,
+          "cost": 20,
+          "speed": 8.8,
+          "freeze": 0
+        },
+        {
+          "damage": 94,
+          "slow": 0.6,
+          "duration": 3,
+          "pierce": 3,
+          "cooldown": 4.5,
+          "cost": 22,
+          "speed": 9.3,
+          "freeze": 0.65
+        }
+      ],
+      "id": "frost"
+    },
+    {
+      "name": "덩굴 결계",
+      "role": "지역 제어 · 속박",
+      "color": "#aabea7",
+      "source": "언덕 너머 샛길의 적 제압",
+      "description": "영역 안의 적을 반복해서 공격합니다. 지상의 적을 묶어 돌진과 추격을 막습니다.",
+      "upgrade": [
+        "영역과 지속 시간 증가",
+        "더 넓고 강한 결계"
+      ],
+      "levels": [
+        {
+          "damage": 18,
+          "radius": 1.4,
+          "duration": 3.5,
+          "cooldown": 10,
+          "cost": 24
+        },
+        {
+          "damage": 25,
+          "radius": 1.65,
+          "duration": 4,
+          "cooldown": 9.5,
+          "cost": 26
+        },
+        {
+          "damage": 33,
+          "radius": 1.9,
+          "duration": 4.5,
+          "cooldown": 9,
+          "cost": 28
+        }
+      ],
+      "id": "roots"
+    },
+    {
+      "name": "비전 장막",
+      "role": "방어 · 근접 대응",
+      "color": "#b9b5d2",
+      "source": "돌무리 언덕 조사",
+      "description": "일정 피해를 흡수하는 보호막을 두릅니다. 위험한 공격을 버티고 반격할 시간을 만듭니다.",
+      "upgrade": [
+        "흡수량과 지속 시간 증가",
+        "종료될 때 충격파 발생"
+      ],
+      "levels": [
+        {
+          "absorb": 55,
+          "duration": 4,
+          "cooldown": 12,
+          "cost": 22,
+          "burst": 0,
+          "radius": 1.5
+        },
+        {
+          "absorb": 85,
+          "duration": 5,
+          "cooldown": 11,
+          "cost": 24,
+          "burst": 0,
+          "radius": 1.5
+        },
+        {
+          "absorb": 115,
+          "duration": 5,
+          "cooldown": 10,
+          "cost": 26,
+          "burst": 65,
+          "radius": 1.5
+        }
+      ],
+      "id": "ward"
+    },
+    {
+      "name": "회피",
+      "role": "이동 · 무적",
+      "color": "#aabfca",
+      "innate": true,
+      "source": "처음부터 사용 가능",
+      "description": "이동 방향으로 빠르게 피합니다. 이동하지 않을 때는 조준 방향으로 나아갑니다.",
+      "upgrade": [
+        "재사용 단축 · 무적 시간 증가",
+        "도착 지점에 짧은 충격파"
+      ],
+      "levels": [
+        {
+          "cooldown": 2,
+          "cost": 0,
+          "invincible": 0.32,
+          "burst": 0,
+          "radius": 0.85
+        },
+        {
+          "cooldown": 1.7,
+          "cost": 0,
+          "invincible": 0.38,
+          "burst": 0,
+          "radius": 0.85
+        },
+        {
+          "cooldown": 1.4,
+          "cost": 0,
+          "invincible": 0.44,
+          "burst": 38,
+          "radius": 0.85
+        }
+      ],
+      "id": "dash"
+    }
+  ]
+}

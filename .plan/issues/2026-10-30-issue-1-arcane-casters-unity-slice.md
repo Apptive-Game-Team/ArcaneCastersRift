@@ -2,7 +2,7 @@
 
 - Date: 2026-10-30
 - GitHub Issue: Apptive-Game-Team/ArcaneCastersRift#1
-- Status: 구현 전 계획 리뷰 완료 — 구현 대기
+- Status: 구현 및 자동 검사 완료 — 실제 입력 플레이 확인 대기
 
 ## Goal
 
@@ -13,7 +13,7 @@ WASD 이동·마우스 조준·마력탄·소환·낙뢰·빙결·장막·덩굴
 ## Non-goals
 
 전체 캠페인·온라인 계정·자동 배포·기존 브라우저 세이브 자동 이전은 포함하지 않는다.
-원본 GyeMong 로컬 변경·기존 포크 main·원본 아트 서브모듈은 변경하지 않는다.
+원본 GyeMong 로컬 변경·기존 포크 main·원본 아트 GUID를 보존한다. 사용자의 추가 요청으로 아트는 이 저장소에 일반 파일로 편입한다.
 
 ## Context / Constraints
 
@@ -30,7 +30,7 @@ WASD 이동·마우스 조준·마력탄·소환·낙뢰·빙결·장막·덩굴
 
 ## Approach (Checklist)
 - [x] **Step 0: Recon** 조직 원격·원본 main·Creature/InputManager/StateMachineMob/ChangeListener API 확인.
-- [ ] **Step 1: Implementation** 새 게임의 데이터·입력 어댑터·Creature·상태머신 적·투사체·소환수·씬 루트·UGUI HUD를 추가한다. Editor 생성기로 스프라이트를 임포트하고 RootBoundary 씬과 전용 빌드 진입점을 만든다. 기존 씬은 남기고 포크의 빌드 대상은 새 씬으로 설정한다.
+- [x] **Step 1: Implementation** 새 게임의 데이터·입력 어댑터·Creature·상태머신 적·투사체·소환수·씬 루트·UGUI HUD를 추가한다. Editor 생성기로 스프라이트를 임포트하고 RootBoundary 씬과 전용 빌드 진입점을 만든다. 기존 씬은 남기고 포크의 빌드 대상은 새 씬으로 설정한다.
 - [ ] **Step 2: Tests** Unity 배치 컴파일과 Editor 검증 명령으로 씬/상속/자산 누락을 확인한다. 새 Play Mode 검사에서 이동·공격·마력·재사용·강화·획득·리스너·씬 재진입을 확인한다. 에디터 플레이 또는 실행 가능한 개발 빌드에서 실제 조작과 화면을 확인한다.
 - [ ] **Step 3: Rollout / Rollback** feat/1에 커밋·푸시하고 조직 포크 main 대상 draft PR을 만든다. 원격 main 병합과 배포는 하지 않는다.
 
@@ -62,7 +62,13 @@ WASD 이동·마우스 조준·마력탄·소환·낙뢰·빙결·장막·덩굴
 
 Rejected feedback: 없음. 두 1차 리뷰의 must-fix와 구체적인 should-fix를 반영했다.
 
-## 이번 Draft PR의 범위
+## 구현 결과와 검증
 
-이 PR에는 구현 계획만 포함한다. 새 게임 코드·씬·자산·빌드 설정은 아직 포함하지 않는다.
-전투·UI 구현과 플레이 검증이 끝나기 전까지 Draft로 유지한다. 이슈 #1은 열어 둔다.
+- 새 런타임, RootBoundary 씬, 마법 7종, 성장·조사·저장·복귀, 작은 HUD와 대화창을 추가했다.
+- 기존 아트 5,648개 파일을 GUID 그대로 편입하고 별도 서브모듈 의존을 제거했다. 새 캐릭터·적·숲·오린 초상을 생성했다.
+- 게임 표시는 Arcane Casters를 사용하며 저장소와 출력 경로는 초기 작업명을 유지한다.
+- Unity 2022.3.34f1 배치 컴파일, Play Mode 30개 검사, 씬 재진입 2회, Windows 개발 빌드에 성공했다.
+- 독립 코드 리뷰에서 몸통 조준·낙뢰 위치·피해 숫자 좌표를 수정한 뒤 재검토 PASS를 받았다.
+- Unity 렌더 타깃으로 야영지와 대화 UI를 캡처해 확인했다. 숨긴 창의 ScreenCapture는 검은 화면이어서 URP 렌더 타깃 방식을 사용했다.
+- 실제 키보드·마우스 조작은 앱 자동화 연결 시간 초과로 미확인이다. 가속 명령 검사를 실제 입력 테스트로 보고하지 않는다. 따라서 PR은 Draft를 유지한다.
+- WebGL/macOS 빌드, 전투 재미와 장시간 균형 검증은 이번 검사 범위에 포함하지 않았다.

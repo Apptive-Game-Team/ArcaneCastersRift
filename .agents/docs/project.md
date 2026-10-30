@@ -5,9 +5,9 @@ against repository configuration before running them.
 
 ## Overview
 
-- Product: **Arcane Casters Rift** — GyeMong 구조를 기반으로 한 2D 마법 액션 RPG
+- Product: **Arcane Casters** — GyeMong 구조를 기반으로 한 2D 마법 액션 RPG
 - Primary users: 플레이어 (데스크톱/웹 브라우저)
-- Core domain: 계절별 스테이지 진행, 보스 패턴 전투, 이벤트 연출
+- Core domain: 현장 조사, 카드 마법 전투와 성장, 보스 제압 후 보고
 - Runtime environment: **Unity 2022.3.34f1**, URP 14.0.11, 2D Feature 2.0.1
 
 ## Architecture
@@ -24,7 +24,7 @@ against repository configuration before running them.
 - Dependency direction: `UISystem` → `GameSystem` (리스너 등록). 역방향 참조 없음.
 - External systems: `Assets/Scripts/GyeMong/UISystem/Social/` 이 `UnityWebRequest`
   로 로그인/회원가입 서버와 통신.
-- Persistent data: `PlayerPrefs` (스테이지 진행도 등). 세이브 파일 포맷 없음.
+- Persistent data: 새 게임은 별도 PlayerPrefs 키의 JSON 연구 기록을 사용한다. 기존 GyeMong 세이브와 분리한다.
 - Art/audio: `Assets/GyeMong_Art`는 GUID를 보존한 기존 아트이며 일반 파일로 직접 추적한다. 새 아트는 `Assets/ArcaneCasters/Art`에 추가한다.
 
 ## Commands
