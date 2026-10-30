@@ -28,7 +28,7 @@ namespace ArcaneCasters.GameSystem {
             public float[] ready = new float[7];
             public float aimX, aimY;
             public int enemies;
-            public string interaction, objective, ui;
+            public string interaction, objective, ui, chapter;
             public int casts;
             public float camX, camY, viewHalfHeight;
             public int potions;
@@ -85,6 +85,7 @@ namespace ArcaneCasters.GameSystem {
                 interaction = session.Interaction,
                 objective = session.Objective,
                 ui = session.UiMode,
+                chapter = session.ChapterId,
                 casts = player.CastCount,
                 mouseX = mouse.x,
                 mouseY = mouse.y,

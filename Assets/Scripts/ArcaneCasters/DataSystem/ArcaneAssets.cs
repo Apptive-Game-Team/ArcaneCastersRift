@@ -8,6 +8,8 @@ namespace ArcaneCasters.DataSystem {
         // Frames follow the order in the strip's .frames.json: mira-* = idle, walk1, walk2, cast;
         // orin = idle, talk; creatures = base, windup.
         [Serializable] public struct FrameSet { public string name; public Sprite[] frames; }
+        // Per chapter: its layout grid and the ground material carrying that chapter's four textures.
+        [Serializable] public struct ChapterArt { public string id; public TextAsset layout; public Material groundMaterial; }
 
         public FrameSet[] frameSets = Array.Empty<FrameSet>();
         public Art[] props = Array.Empty<Art>();
@@ -17,6 +19,8 @@ namespace ArcaneCasters.DataSystem {
         public Texture2D grass, dirt, water, stone;
         public TextAsset spells;
         public TextAsset layout;
+        public ChapterArt[] chapters = Array.Empty<ChapterArt>();
+        public Sprite appIcon;
         public Font font;
         public Material material;
         public Material groundMaterial;
@@ -24,6 +28,11 @@ namespace ArcaneCasters.DataSystem {
         public Sprite[] Frames(string key) {
             foreach (var set in frameSets) if (set.name == key) return set.frames;
             return Array.Empty<Sprite>();
+        }
+
+        public ChapterArt Chapter(string id) {
+            foreach (var chapter in chapters) if (chapter.id == id) return chapter;
+            return new ChapterArt { id = id, layout = layout, groundMaterial = groundMaterial };
         }
 
         public Sprite Prop(string key) => Find(props, key);

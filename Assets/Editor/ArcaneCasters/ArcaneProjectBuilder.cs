@@ -29,6 +29,16 @@ namespace ArcaneCasters.Editor {
             { "tent", (2.3f, .1f) }, { "campfire", (1.0f, .2f) }, { "bench", (.85f, .18f) }, { "world-root", (2.7f, .12f) },
             { "crystals", (1.6f, .14f) }, { "signpost", (2.2f, .06f) }, { "ruin-arch", (3.3f, .08f) }, { "ruin-pillar", (2.6f, .08f) },
             { "rune-stone", (1.7f, .1f) },
+            // chapter 2: village and cave (flat ground pieces use a centred pivot)
+            { "stone-hut", (2.0f, .1f) }, { "cairn", (1.8f, .08f) }, { "play-ring", (1.6f, .5f) }, { "quarry-blocks", (1.4f, .12f) },
+            { "tool-rack", (1.5f, .08f) }, { "spring-pool", (2.0f, .5f) }, { "rock-outcrop", (3.0f, .06f) }, { "boulder-ridge", (1.4f, .15f) },
+            { "cliff-cave", (3.2f, .05f) }, { "stalagmites", (1.8f, .08f) }, { "red-pillar", (2.4f, .05f) }, { "cave-crystals", (1.4f, .1f) },
+            { "cave-wall", (2.6f, .06f) }, { "rubble", (1.0f, .15f) }, { "red-cracks", (1.0f, .5f) }, { "stele", (2.0f, .06f) },
+            { "steps", (1.0f, .15f) }, { "rock-column", (2.8f, .05f) },
+        };
+        private static readonly (string id, string scene)[] Scenes = {
+            (RootBoundaryChapter.ChapterId, "Assets/Scenes/ArcaneCasters/RootBoundary.unity"),
+            (StoneVillageChapter.ChapterId, "Assets/Scenes/ArcaneCasters/StoneVillage.unity"),
         };
 
         [Serializable] private sealed class StripInfo { public int[] cell; public float[] pivot; public string[] names; }
@@ -41,9 +51,15 @@ namespace ArcaneCasters.Editor {
             if (!assets) { assets = ScriptableObject.CreateInstance<ArcaneAssets>(); AssetDatabase.CreateAsset(assets, Root + "/FieldAssets.asset"); }
             assets.material = SpriteMaterial();
             assets.groundMaterial = GroundMaterial(out assets.grass, out assets.dirt, out assets.water, out assets.stone);
+            var highland = HighlandMaterial(assets.water);
             assets.font = AssetDatabase.LoadAssetAtPath<Font>(Art + "/Jua-Regular.ttf");
             assets.spells = AssetDatabase.LoadAssetAtPath<TextAsset>(Root + "/Data/spells.json");
             assets.layout = AssetDatabase.LoadAssetAtPath<TextAsset>(Root + "/Data/root-boundary.txt");
+            assets.chapters = new[] {
+                new ArcaneAssets.ChapterArt { id = RootBoundaryChapter.ChapterId, layout = assets.layout, groundMaterial = assets.groundMaterial },
+                new ArcaneAssets.ChapterArt { id = StoneVillageChapter.ChapterId, layout = AssetDatabase.LoadAssetAtPath<TextAsset>(Root + "/Data/stone-village.txt"), groundMaterial = highland },
+            };
+            ApplyAppIcon();
             assets.frameSets = Directory.GetFiles(Art + "/Characters", "*.png").Concat(Directory.GetFiles(Art + "/Creatures", "*.png"))
                 .Select(path => path.Replace('\\', '/')).OrderBy(path => path)
                 .Select(path => new ArcaneAssets.FrameSet { name = Path.GetFileNameWithoutExtension(path), frames = ImportStrip(path) }).ToArray();
@@ -55,7 +71,9 @@ namespace ArcaneCasters.Editor {
             if (!assets.layout) throw new InvalidOperationException("Missing layout " + Root + "/Data/root-boundary.txt");
             EditorUtility.SetDirty(assets);
             AssetDatabase.SaveAssets();
-            WriteScene(assets);
+            foreach (var (id, scene) in Scenes) WriteScene(assets, id, scene);
+            EditorBuildSettings.scenes = Scenes.Select(s => new EditorBuildSettingsScene(s.scene, true)).ToArray();
+            AssetDatabase.SaveAssets();
             Debug.Log("ARCANE_BUILD_SCENE_OK");
         }
 
@@ -85,8 +103,40 @@ namespace ArcaneCasters.Editor {
             return material;
         }
 
-        private static Texture2D ImportGround(string name) {
-            string path = Art + "/Ground/" + name + ".png";
+        private static Material HighlandMaterial(Texture2D water) {
+            var shader = Shader.Find("ArcaneCasters/GroundSplat");
+            string path = Root + "/FieldGroundHighland.mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (!material) { material = new Material(shader); AssetDatabase.CreateAsset(material, path); }
+            material.shader = shader;
+            material.SetTexture("_Grass", ImportGround("meadow", "GroundHighland"));
+            material.SetTexture("_Dirt", ImportGround("gravel", "GroundHighland"));
+            material.SetTexture("_Water", water);
+            material.SetTexture("_Stone", ImportGround("cave", "GroundHighland"));
+            material.SetFloat("_Tiling", 4f);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        // The Windows executable and window icon.
+        private static void ApplyAppIcon() {
+            string path = Art + "/AppIcon/arcane-casters.png";
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            if (importer == null) return;
+            importer.textureType = TextureImporterType.Default;
+            importer.alphaIsTransparency = true;
+            importer.mipmapEnabled = false;
+            importer.maxTextureSize = 1024;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.SaveAndReimport();
+            var icon = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+            PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.Unknown, new[] { icon });
+            int sizes = PlayerSettings.GetIconSizesForTargetGroup(BuildTargetGroup.Standalone).Length;
+            PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.Standalone, Enumerable.Repeat(icon, sizes).ToArray());
+        }
+
+        private static Texture2D ImportGround(string name, string folder = "Ground") {
+            string path = Art + "/" + folder + "/" + name + ".png";
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
             importer.textureType = TextureImporterType.Default;
             importer.wrapMode = TextureWrapMode.Repeat;
@@ -177,11 +227,12 @@ namespace ArcaneCasters.Editor {
             }
         }
 
-        private static void WriteScene(ArcaneAssets assets) {
+        private static void WriteScene(ArcaneAssets assets, string chapterId, string scenePath) {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             var root = new GameObject("Arcane field session");
             var session = root.AddComponent<ArcaneSession>();
             session.Assets = assets;
+            session.ChapterId = chapterId;
             var input = root.AddComponent<ArcaneInput>();
             input.Session = session;
             var hud = root.AddComponent<ArcaneHud>();
@@ -200,8 +251,7 @@ namespace ArcaneCasters.Editor {
             cameraObject.AddComponent<AudioListener>();
             cameraObject.transform.position = new Vector3(-14, -8, -10);
             cameraObject.AddComponent<ArcaneCamera>().Session = session;
-            EditorSceneManager.SaveScene(scene, ScenePath);
-            EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
+            EditorSceneManager.SaveScene(scene, scenePath);
             PlayerSettings.productName = "Arcane Casters";
             PlayerSettings.companyName = "Apptive Game Team";
             PlayerSettings.defaultScreenWidth = 1280;
@@ -217,7 +267,7 @@ namespace ArcaneCasters.Editor {
             PlayerSettings.productName = "Arcane Casters";
             if (!File.Exists(ScenePath)) throw new InvalidOperationException("Run Import Art and Rebuild First Field first.");
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
-                scenes = new[] { ScenePath },
+                scenes = Scenes.Select(s => s.scene).ToArray(),
                 locationPathName = "Build/ArcaneCastersRift/ArcaneCastersRift.exe",
                 target = BuildTarget.StandaloneWindows64,
                 options = BuildOptions.Development,

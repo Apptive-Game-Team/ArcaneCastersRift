@@ -28,7 +28,7 @@ namespace ArcaneCasters.GameSystem {
         private Vector2 dashDirection;
         private SpriteRenderer wardBubble;
 
-        public void Init(ArcaneSession session, ArcaneSpellBook book) {
+        public void Init(ArcaneSession session, ArcaneSpellBook book, string frames = "mira") {
             Session = session;
             Book = book;
             maxHp = currentHp = 120;
@@ -40,7 +40,7 @@ namespace ArcaneCasters.GameSystem {
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             gameObject.AddComponent<CircleCollider2D>().radius = ArcaneHitShapes.PlayerRadius;
             View = gameObject.AddComponent<ArcaneActorView>();
-            View.Init(session.Assets, "mira");
+            View.Init(session.Assets, frames);
             _spriteRenderer = View.Body;
             wardBubble = new GameObject("Ward").AddComponent<SpriteRenderer>();
             wardBubble.transform.SetParent(transform, false);

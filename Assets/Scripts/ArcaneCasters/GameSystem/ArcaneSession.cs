@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ArcaneCasters.DataSystem;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ArcaneCasters.GameSystem {
     public readonly struct DialogueLine {
@@ -10,130 +12,95 @@ namespace ArcaneCasters.GameSystem {
         public DialogueLine(string speaker, string text) { Speaker = speaker; Text = text; }
     }
 
-    // The first field run: progress, research targets, encounters and save data.
+    // Shared systems of a field run: player, field, enemies, combat, dialogue and save data.
+    // The story rules of the chapter being played live in ArcaneChapter.
     public sealed class ArcaneSession : MonoBehaviour {
-        public const string Mira = "미라", Orin = "오린";
-
-        private readonly struct Encounter {
-            public readonly char Marker; public readonly EnemyRole Role; public readonly string Id; public readonly int Gate;
-            public Encounter(char marker, EnemyRole role, string id, int gate) { Marker = marker; Role = role; Id = id; Gate = gate; }
-        }
-
-        // Ids are save keys; gate is the story phase from which the encounter exists.
-        private static readonly Encounter[] Encounters = {
-            new Encounter('1', EnemyRole.Imp, "root-1", 1), new Encounter('2', EnemyRole.Imp, "root-2", 1), new Encounter('3', EnemyRole.Spitter, "root-3", 1),
-            new Encounter('x', EnemyRole.Brute, "grove-1", 0), new Encounter('y', EnemyRole.Charger, "grove-2", 0),
-            new Encounter('4', EnemyRole.Wisp, "brook-1", 0), new Encounter('5', EnemyRole.Spitter, "brook-2", 0),
-            new Encounter('6', EnemyRole.Charger, "bridge-1", 0), new Encounter('7', EnemyRole.Brute, "bridge-2", 0),
-            new Encounter('8', EnemyRole.Wisp, "ruin-1", 3), new Encounter('9', EnemyRole.Spitter, "ruin-2", 3), new Encounter('W', EnemyRole.Warden, "warden", 3),
+        public const string Mira = "미라", Orin = "오린", Fin = "핀";
+        public static readonly (string id, string scene, string title)[] Chapters = {
+            (RootBoundaryChapter.ChapterId, "RootBoundary", "1장 · 세계수 뿌리 (미라)"),
+            (StoneVillageChapter.ChapterId, "StoneVillage", "2장 · 돌골렘 마을 (핀)"),
         };
 
-        public sealed class Target {
-            public string Id;
-            public Vector2 Position;
-            public float Radius, PromptHeight;
-        }
-
         public ArcaneAssets Assets;
+        public string ChapterId = RootBoundaryChapter.ChapterId;
         public string SaveKey = "ArcaneCastersRift.Unity.v1";
+        public ArcaneChapter Chapter { get; private set; }
         public ArcaneField Field { get; private set; }
         public ArcaneCaster Player { get; private set; }
         public ArcaneGolem Golem;
         public readonly List<ArcaneEnemy> Enemies = new List<ArcaneEnemy>();
-        public readonly List<Target> Targets = new List<Target>();
         public bool Paused { get; private set; }
+        public bool Ended { get; private set; }
         public string UiMode = "play";
         public bool InCombat => Player && Enemies.Any(e => e && !e.Dead && e.Alerted && Vector2.Distance(e.transform.position, Player.transform.position) < 7);
         public LayerMask Walls => LayerMask.GetMask("Wall");
-        public Vector2 StartPoint => Field.Marker('P');
+        public Vector2 StartPoint => Chapter.RespawnPoint;
         public Vector2 OrinPoint => Field.Marker('O');
         public ArcaneAudio Audio { get; private set; }
         public float ShakeUntil;
         public int RewardsIssued { get; private set; }
+        public ArcaneSave Progress => Player.Book.Save;
+        public bool CanTalk => OnDialogue != null && !Paused;
+        // 0 outside, about .82 deep in a cave; the HUD draws it as a dark ring around the player.
+        public float Darkness { get; private set; }
 
         public event Action<string> OnToast;
         public event Action<IReadOnlyList<DialogueLine>, Action> OnDialogue;
         public event Action<Vector2, string, Color> OnFloatText;
         public event Action<float> OnPlayerHurt;
         public event Action OnPlayerDown, OnPlayerRespawn;
+        public event Action<string, string, string> OnEnding;
 
         private HashSet<string> defeated;
-        private ArcaneActorView orin;
         private SpriteRenderer compass;
+        private Mesh darkRing;
+        private Transform darkRingTransform;
         private LineRenderer beacon;
 
-        private ArcaneSave Progress => Player.Book.Save;
+        public string Objective => Chapter.Objective;
+        public bool HasGoal => Chapter.HasGoal && !Ended;
+        public Vector2 Goal => Chapter.Goal;
 
-        public string Objective {
-            get {
-                switch (Progress.phase) {
-                    case 0: return "세계수 뿌리 조사하기";
-                    case 1: return "뿌리 곁의 불씨 정리하기";
-                    case 2: return !Progress.brook && !Progress.rocks ? "개울 결정과 돌무리 조사하기" : !Progress.brook ? "개울의 결정 조사하기" : "돌무리 조사하기";
-                    case 3: return "유적의 문지기 제압하기";
-                    case 4: return "야영지로 돌아가 선생님께 보고하기";
-                    default: return "첫 현장 연구 완료 · 숲 더 둘러보기";
-                }
-            }
-        }
-
-        public bool HasGoal => Progress.phase < 5;
-
-        public Vector2 Goal {
-            get {
-                var save = Progress;
-                switch (save.phase) {
-                    case 0: case 1: return Field.Marker('G');
-                    case 2:
-                        if (save.brook) return Field.Marker('T');
-                        if (save.rocks) return Field.Marker('C');
-                        Vector2 p = Player.transform.position;
-                        return Vector2.Distance(p, Field.Marker('C')) < Vector2.Distance(p, Field.Marker('T')) ? Field.Marker('C') : Field.Marker('T');
-                    case 3: return Field.Marker('W');
-                    default: return OrinPoint;
-                }
-            }
-        }
+        private static bool chapterArgumentUsed;
 
         private void Start() {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            // --arcane-chapter <id> opens another chapter at launch (verification and captures).
+            string[] launch = Environment.GetCommandLineArgs();
+            int chapterIndex = Array.IndexOf(launch, "--arcane-chapter");
+            if (!chapterArgumentUsed && chapterIndex >= 0 && chapterIndex + 1 < launch.Length) {
+                chapterArgumentUsed = true;
+                if (launch[chapterIndex + 1] != ChapterId) { LoadChapter(launch[chapterIndex + 1]); return; }
+            }
+#endif
+            Chapter = ArcaneChapter.Create(ChapterId);
+            Chapter.Attach(this);
+            SaveKey += Chapter.SaveSuffix;
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             string[] args = Environment.GetCommandLineArgs();
             if (Array.IndexOf(args, "--arcane-capture-dir") >= 0) SaveKey = "ArcaneCasters.Capture." + Guid.NewGuid().ToString("N");
             int saveKeyIndex = Array.IndexOf(args, "--arcane-save-key");
-            if (saveKeyIndex >= 0 && saveKeyIndex + 1 < args.Length) SaveKey = "ArcaneCasters.Test." + args[saveKeyIndex + 1];
+            if (saveKeyIndex >= 0 && saveKeyIndex + 1 < args.Length) SaveKey = "ArcaneCasters.Test." + args[saveKeyIndex + 1] + Chapter.SaveSuffix;
 #endif
             Audio = gameObject.AddComponent<ArcaneAudio>();
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             gameObject.AddComponent<ArcaneRenderCapture>();
             gameObject.AddComponent<ArcaneTelemetry>();
 #endif
-            Field = ArcaneField.Create(Assets, transform);
+            Field = ArcaneField.Create(Assets, transform, Chapter.Id, Chapter.Biome);
             ArcaneSave save = null;
             try { if (PlayerPrefs.HasKey(SaveKey)) save = JsonUtility.FromJson<ArcaneSave>(PlayerPrefs.GetString(SaveKey)); }
             catch (Exception) { Toast("연구 기록을 읽지 못했어. 새 기록으로 시작할게."); }
             var book = new ArcaneSpellBook(Assets.spells, save);
             defeated = new HashSet<string>(book.Save.defeated);
-            Player = new GameObject("Mira").AddComponent<ArcaneCaster>();
-            Player.transform.position = StartPoint;
-            Player.Init(this, book);
+            Player = new GameObject(Chapter.PlayerName).AddComponent<ArcaneCaster>();
+            Player.Init(this, book, Chapter.PlayerFrames);
+            Player.transform.position = Field.Marker('P');
             Field.Follow(Player.transform);
-            Field.SetSealOpen(book.Save.phase >= 3);
-            orin = new GameObject("Orin").AddComponent<ArcaneActorView>();
-            orin.transform.position = OrinPoint;
-            orin.Init(Assets, "orin", 0, facesRight: true);
-            BuildTargets();
+            Chapter.Begin();
+            if (Progress.phase > 0 && Chapter.RespawnPoint != Field.Marker('P')) Player.transform.position = Chapter.RespawnPoint;
             SpawnUnlockedEncounters(false);
             BuildGuides();
-            if (!book.Save.briefed) Invoke(nameof(Briefing), .9f);
-        }
-
-        private void BuildTargets() {
-            Targets.Add(new Target { Id = "orin", Position = OrinPoint, Radius = 1.9f, PromptHeight = 2.2f });
-            Targets.Add(new Target { Id = "root", Position = Field.Marker('G'), Radius = 2.6f, PromptHeight = .9f });
-            Targets.Add(new Target { Id = "brook", Position = Field.Marker('C'), Radius = 1.9f, PromptHeight = 1.9f });
-            Targets.Add(new Target { Id = "stones", Position = Field.Marker('T'), Radius = 1.9f, PromptHeight = 1.9f });
-            Targets.Add(new Target { Id = "vine", Position = Field.Marker('V'), Radius = 1.8f, PromptHeight = 1.4f });
-            Targets.Add(new Target { Id = "seal", Position = Field.SealCenter, Radius = 1.8f, PromptHeight = 1.2f });
         }
 
         private void BuildGuides() {
@@ -151,10 +118,12 @@ namespace ArcaneCasters.GameSystem {
             beacon.startColor = new Color(1, .7f, .25f, .45f);
             beacon.endColor = new Color(1, .7f, .25f, 0);
             beacon.sortingOrder = 30000;
+            BuildDarkRing();
         }
 
         private void Update() {
             if (!Player || !compass) return;
+            Chapter.Tick();
             bool show = HasGoal && !Paused && !Player.Dead;
             Vector2 goal = Goal, p = Player.transform.position;
             Vector2 direction = (goal - p).normalized;
@@ -167,10 +136,11 @@ namespace ArcaneCasters.GameSystem {
             beacon.startColor = new Color(1, .7f, .25f, pulse);
             beacon.SetPosition(0, goal + Vector2.up * .1f);
             beacon.SetPosition(1, goal + Vector2.up * 3.6f);
-            if (orin) {
-                Vector2 toPlayer = p - OrinPoint;
-                orin.facing = toPlayer.sqrMagnitude > .01f ? toPlayer : Vector2.down;
-            }
+            // Caves close in around the player; outside the overlay fades away.
+            Darkness = Mathf.MoveTowards(Darkness, Chapter.IsDark(p) ? .9f : 0f, Time.unscaledDeltaTime * 1.5f);
+            darkRingTransform.position = p + Vector2.up * .6f;
+            darkRingTransform.gameObject.SetActive(Darkness > .01f);
+            if (Darkness > .01f) TintDarkRing(Darkness);
         }
 
         private static Sprite ArrowSprite() {
@@ -191,38 +161,100 @@ namespace ArcaneCasters.GameSystem {
             return Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.one * .5f, size);
         }
 
-        // ---------- dialogue ----------
-        private void Talk(Action then, params DialogueLine[] lines) {
+        // Vertex-coloured ring mesh: clear inside 2.8 units, dark from 5.6 units out to 30 units.
+        private static readonly float[] DarkRadii = { 2.4f, 5.0f, 30f };
+        private static readonly float[] DarkAlpha = { 0f, 1f, 1f };
+        private const int DarkSegments = 48;
+
+        private void BuildDarkRing() {
+            darkRing = new Mesh { name = "Cave darkness" };
+            var vertices = new Vector3[DarkRadii.Length * DarkSegments];
+            for (int ring = 0; ring < DarkRadii.Length; ring++)
+                for (int i = 0; i < DarkSegments; i++) {
+                    float a = i * Mathf.PI * 2 / DarkSegments;
+                    vertices[ring * DarkSegments + i] = new Vector3(Mathf.Cos(a), Mathf.Sin(a)) * DarkRadii[ring];
+                }
+            var triangles = new List<int>();
+            for (int ring = 0; ring < DarkRadii.Length - 1; ring++)
+                for (int i = 0; i < DarkSegments; i++) {
+                    int a = ring * DarkSegments + i, b = ring * DarkSegments + (i + 1) % DarkSegments;
+                    int c = a + DarkSegments, d = b + DarkSegments;
+                    triangles.AddRange(new[] { a, c, b, b, c, d });
+                }
+            darkRing.vertices = vertices;
+            darkRing.uv = new Vector2[vertices.Length];
+            darkRing.triangles = triangles.ToArray();
+            TintDarkRing(0);
+            var go = new GameObject("Cave darkness");
+            go.AddComponent<RuntimeMeshOwner>().Owned = darkRing;
+            go.AddComponent<MeshFilter>().sharedMesh = darkRing;
+            var render = go.AddComponent<MeshRenderer>();
+            render.sharedMaterial = Assets.material;
+            render.sortingOrder = 31000;
+            darkRingTransform = go.transform;
+            go.SetActive(false);
+        }
+
+        private void TintDarkRing(float strength) {
+            var colors = new Color[DarkRadii.Length * DarkSegments];
+            for (int ring = 0; ring < DarkRadii.Length; ring++)
+                for (int i = 0; i < DarkSegments; i++) colors[ring * DarkSegments + i] = new Color(.02f, .03f, .06f, DarkAlpha[ring] * strength);
+            darkRing.colors = colors;
+        }
+
+        // ---------- story helpers used by chapters ----------
+        public void After(float seconds, Action action) => StartCoroutine(Delay(seconds, action));
+
+        private static IEnumerator Delay(float seconds, Action action) {
+            yield return new WaitForSeconds(seconds);
+            action();
+        }
+
+        public void Talk(Action then, params DialogueLine[] lines) {
             if (OnDialogue == null) { then?.Invoke(); return; }
             OnDialogue.Invoke(lines, then);
         }
 
-        private static DialogueLine M(string text) => new DialogueLine(Mira, text);
-        private static DialogueLine O(string text) => new DialogueLine(Orin, text);
+        public void SetSpeaker(string speaker) => Chapter.SpeakerChanged(speaker);
 
-        public void SetSpeaker(string speaker) { if (orin) orin.talking = speaker == Orin; }
+        public bool AllDefeated(params string[] ids) => ids.All(defeated.Contains);
 
-        private void Briefing() {
-            if (Progress.briefed) return;
-            if (OnDialogue == null || Paused) { Invoke(nameof(Briefing), .3f); return; }
-            Progress.briefed = true;
+        public void Unlock(ArcaneSpell spell) {
+            if (!Player.Book.Unlock(spell)) return;
+            Player.Book.Save.research += 2;
+            Audio.Chime();
+            Toast(Player.Book.Definition(spell).name + " 카드 획득 · [K]에서 장착과 강화");
             Save();
-            Talk(() => Toast("WASD 이동 · 마우스 조준 · 좌클릭 마력탄 · Space 회피 · F 조사"),
-                O("왔구나, 미라. 오늘은 세계수 뿌리의 마력부터 재 보거라."),
-                M("네, 선생님. 핀은요?"),
-                O("돌부족 마을로 갔다. 자네들 기록은 돌아와서 나란히 놓고 보자꾸나."),
-                M("그럼 제 쪽이 먼저 정리돼 있어야겠네요. 다녀올게요."));
+        }
+
+        public void ShowEnding(string voice, string title, string subtitle) {
+            Ended = true;
+            Player.Move = Vector2.zero;
+            OnEnding?.Invoke(voice, title, subtitle);
+        }
+
+        public void LoadChapter(string id) {
+            if (Player) Save();
+            Time.timeScale = 1;
+            foreach (var chapter in Chapters) if (chapter.id == id) SceneManager.LoadScene(chapter.scene);
+        }
+
+        public void RestartChapter() {
+            PlayerPrefs.DeleteKey(SaveKey);
+            PlayerPrefs.Save();
+            Time.timeScale = 1;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         // ---------- interaction ----------
-        public Target CurrentTarget {
+        public ArcaneChapter.Target CurrentTarget {
             get {
-                if (!Player) return null;
+                if (!Player || Ended) return null;
                 Vector2 p = Player.transform.position;
-                Target best = null;
+                ArcaneChapter.Target best = null;
                 float bestDistance = float.MaxValue;
-                foreach (var target in Targets) {
-                    if (!Available(target)) continue;
+                foreach (var target in Chapter.Targets) {
+                    if (!Chapter.Available(target)) continue;
                     float distance = Vector2.Distance(p, target.Position);
                     if (distance > target.Radius || distance >= bestDistance) continue;
                     best = target;
@@ -232,131 +264,28 @@ namespace ArcaneCasters.GameSystem {
             }
         }
 
-        private bool Available(Target target) {
-            var save = Progress;
-            switch (target.Id) {
-                case "root": return save.phase == 0;
-                case "brook": return !save.brook;
-                case "stones": return !save.rocks;
-                case "vine": return !save.vine;
-                case "seal": return !Field.SealOpen;
-                default: return true;
-            }
-        }
-
         public string Interaction {
             get {
                 var target = CurrentTarget;
-                if (target == null) return "";
-                switch (target.Id) {
-                    case "orin": return Progress.phase == 4 ? "선생님께 보고" : "선생님과 이야기 · 휴식";
-                    case "root": return "세계수 뿌리 조사";
-                    case "brook": return "개울의 결정 조사";
-                    case "stones": return "돌무리 조사";
-                    case "vine": return "덩굴 표본 채집";
-                    case "seal": return "봉인 살펴보기";
-                    default: return "";
-                }
+                return target == null ? "" : Chapter.Label(target);
             }
         }
 
         public void Interact() {
             var target = CurrentTarget;
             if (target == null || Paused || Player.Dead) return;
-            var save = Progress;
-            switch (target.Id) {
-                case "orin": TalkToOrin(save); break;
-                case "root":
-                    Talk(RootAwakens,
-                        M("잠깐. 뿌리에 열이 남아 있어. 이 숲에서 이런 열이 날 리가 없는데."),
-                        M("…불씨? 뿌리 밑에서 뭔가 올라와."));
-                    break;
-                case "brook":
-                    if (InCombat) { Toast("먼저 주변의 불씨를 정리하자."); return; }
-                    save.brook = true;
-                    Talk(() => { Unlock(ArcaneSpell.Frost); CheckProgress(); },
-                        M("물가의 결정이 불씨를 식히고 있어. 조건은… 차가운 흐름이 계속 닿는 것."),
-                        M("이 흐름을 카드에 옮겨 보자. 빙결 다음에 낙뢰를 쓰면 더 잘 들을 거야."));
-                    break;
-                case "stones":
-                    if (InCombat) { Toast("먼저 주변을 안전하게 만들자."); return; }
-                    save.rocks = true;
-                    Talk(() => { Unlock(ArcaneSpell.Ward); CheckProgress(); },
-                        M("돌부족의 보호 무늬야. 선이 유적 쪽으로 이어져 있어."),
-                        M("핀이 봤으면 먼저 만져 봤겠지. …기록부터 하자."));
-                    break;
-                case "vine":
-                    if (InCombat) { Toast("덩굴 근처가 아직 위험해."); return; }
-                    save.vine = true;
-                    Talk(() => Unlock(ArcaneSpell.Roots), M("덩굴이 움직이는 걸 붙잡아 두네. 표본으로 남겨 두자."));
-                    break;
-                case "seal":
-                    Toast("유적이 봉인돼 있어. 개울과 돌무리부터 조사하자.");
-                    break;
-            }
-            Save();
-        }
-
-        private void TalkToOrin(ArcaneSave save) {
-            if (InCombat) { Toast("주변이 안전해지면 선생님께 가자."); return; }
-            Player.Rest();
-            if (save.phase == 4) {
-                save.phase = 5;
-                Save();
-                Talk(() => { Toast("첫 현장 연구 완료 · 기록이 저장됐어."); Audio.Chime(); },
-                    M("선생님, 다녀왔어요. 뿌리 밑에서 불씨가 올라왔고, 유적의 문지기가 길을 막고 있었어요."),
-                    O("직접 본 것이냐?"),
-                    M("네. 문지기 눈이 붉게 빛났어요. 개울 결정이랑 돌무리 무늬도 여기 적어 왔어요."),
-                    O("흠. 여기까지는 잘했구나. 결론은 아직 적지 말거라."),
-                    O("핀이 돌아오면 두 기록을 나란히 놓고 보자. 오늘은 쉬어라."));
-                return;
-            }
-            if (save.phase >= 5) { Talk(null, O("쉬었다 가거라. 숲은 아직 넓다.")); return; }
-            Talk(null, O(save.phase == 0 ? "뿌리는 길 따라 북동쪽이다. 서두르지 말고 살펴보거라." : "몸부터 추스르거라. 그다음은 어찌 되었느냐?"));
-        }
-
-        private void RootAwakens() {
-            if (Progress.phase != 0) return;
-            Progress.phase = 1;
-            SpawnUnlockedEncounters(true);
-            Toast("불씨가 깨어났다! 정리하자.");
+            Chapter.Interact(target);
             Save();
         }
 
         public void SpawnUnlockedEncounters(bool announce) {
-            foreach (var encounter in Encounters) {
+            foreach (var encounter in Chapter.Encounters) {
                 if (Progress.phase < encounter.Gate || defeated.Contains(encounter.Id)) continue;
                 if (Enemies.Any(e => e && e.SpawnId == encounter.Id)) continue;
                 Vector2 at = Field.Marker(encounter.Marker);
                 var enemy = Spawn(encounter.Role, encounter.Id, at);
                 if (announce && enemy) ArcaneEffects.Sprite(Assets, "spark", at + Vector2.up * .4f, 1.2f, .4f, 0, 22000, new Color(1, .55f, .3f));
             }
-        }
-
-        private void CheckProgress() {
-            var save = Progress;
-            if (save.phase == 1 && new[] { "root-1", "root-2", "root-3" }.All(defeated.Contains)) {
-                save.phase = 2;
-                Unlock(ArcaneSpell.Lightning);
-                Toast("뿌리의 불씨를 정리했어. 이제 개울과 돌무리를 조사하자.");
-            }
-            if (save.phase == 2 && save.brook && save.rocks) {
-                save.phase = defeated.Contains("warden") ? 4 : 3;
-                if (save.phase == 3) {
-                    Field.SetSealOpen(true);
-                    SpawnUnlockedEncounters(true);
-                    Audio.Chime();
-                    Toast("유적의 봉인이 풀렸어. 문지기를 확인하러 가자.");
-                }
-            }
-        }
-
-        private void Unlock(ArcaneSpell spell) {
-            if (!Player.Book.Unlock(spell)) return;
-            Player.Book.Save.research += 2;
-            Audio.Chime();
-            Toast(Player.Book.Definition(spell).name + " 카드 획득 · [K]에서 장착과 강화");
-            Save();
         }
 
         // ---------- combat ----------
@@ -403,11 +332,7 @@ namespace ArcaneCasters.GameSystem {
             Enemies.Remove(enemy);
             Player.Reward(enemy.Boss ? 150 : 35);
             Player.Book.Save.research += enemy.Boss ? 3 : 1;
-            if (enemy.Boss) {
-                Progress.phase = 4;
-                Toast("문지기가 멈췄어. 야영지로 돌아가 선생님께 보고하자.");
-            }
-            CheckProgress();
+            Chapter.EnemyDefeated(enemy);
             Save();
         }
 
@@ -433,12 +358,13 @@ namespace ArcaneCasters.GameSystem {
 
         public void PlayerDown() {
             OnPlayerDown?.Invoke();
-            Toast("쓰러졌어… 연구 기록은 무사해. 야영지에서 다시 시작하자.");
+            Toast("쓰러졌어… 연구 기록은 무사해. 다시 시작하자.");
         }
 
         public void PlayerRespawned() {
             foreach (var enemy in Enemies.ToArray()) if (enemy && !enemy.Dead) enemy.ResetToHome();
             if (Golem) Destroy(Golem.gameObject);
+            Chapter.PlayerRespawned();
             Save();
             OnPlayerRespawn?.Invoke();
         }

@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ArcaneCasters/RootBoundary.unity
     guid: c537d96659fc3fd40bfa30413bbed3c5
+  - enabled: 1
+    path: Assets/Scenes/ArcaneCasters/StoneVillage.unity
+    guid: 5d9793848729d574fa9166fe750fea55
   m_configObjects: {}

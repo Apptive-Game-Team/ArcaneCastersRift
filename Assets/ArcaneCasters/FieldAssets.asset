@@ -13,6 +13,24 @@ MonoBehaviour:
   m_Name: FieldAssets
   m_EditorClassIdentifier: 
   frameSets:
+  - name: fin-down
+    frames:
+    - {fileID: 1203926356689778522, guid: 5a1dc0e85e7b76a498c41a63435bd9c9, type: 3}
+    - {fileID: -4308460226465673899, guid: 5a1dc0e85e7b76a498c41a63435bd9c9, type: 3}
+    - {fileID: 8175230495999384944, guid: 5a1dc0e85e7b76a498c41a63435bd9c9, type: 3}
+    - {fileID: 6906762127993726159, guid: 5a1dc0e85e7b76a498c41a63435bd9c9, type: 3}
+  - name: fin-side
+    frames:
+    - {fileID: 475199166667958193, guid: 7e7f1ec1fe1039e46ac76341a38e1f14, type: 3}
+    - {fileID: -2525208894612151581, guid: 7e7f1ec1fe1039e46ac76341a38e1f14, type: 3}
+    - {fileID: 9031496099658336536, guid: 7e7f1ec1fe1039e46ac76341a38e1f14, type: 3}
+    - {fileID: 6903325627523056530, guid: 7e7f1ec1fe1039e46ac76341a38e1f14, type: 3}
+  - name: fin-up
+    frames:
+    - {fileID: -9047046966871632226, guid: 09e5f6be21b0a784b9fa68c81e552719, type: 3}
+    - {fileID: -8977433481704642941, guid: 09e5f6be21b0a784b9fa68c81e552719, type: 3}
+    - {fileID: 8753408859679790841, guid: 09e5f6be21b0a784b9fa68c81e552719, type: 3}
+    - {fileID: 175157114527043706, guid: 09e5f6be21b0a784b9fa68c81e552719, type: 3}
   - name: mira-down
     frames:
     - {fileID: -3066134901859567313, guid: f6223229e20c6864a9abf76f6d044083, type: 3}
@@ -63,6 +81,14 @@ MonoBehaviour:
     frames:
     - {fileID: -2134395253052702549, guid: 09592c02754c3d74b887264c39636aa0, type: 3}
     - {fileID: 773659372997615235, guid: 09592c02754c3d74b887264c39636aa0, type: 3}
+  - name: mok
+    frames:
+    - {fileID: 4863114866236772728, guid: 37a28b504d64a174ca07aefb2920bebb, type: 3}
+    - {fileID: 2612410062646701008, guid: 37a28b504d64a174ca07aefb2920bebb, type: 3}
+  - name: portal
+    frames:
+    - {fileID: -7790042971108220301, guid: 1afda81e7f42bc94ea7f8d3076389de5, type: 3}
+    - {fileID: -5977899381375562462, guid: 1afda81e7f42bc94ea7f8d3076389de5, type: 3}
   props:
   - name: tree-broad
     sprite: {fileID: 21300000, guid: b026642bd8ce4cb419151572896ea9f8, type: 3}
@@ -90,6 +116,42 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: dccb14366b7f52146bddae6b8b2f2c2e, type: 3}
   - name: rune-stone
     sprite: {fileID: 21300000, guid: 8e0bb5b6f5098ec4fa699e350f358a33, type: 3}
+  - name: stone-hut
+    sprite: {fileID: 21300000, guid: d1a49977552c72d45adaacf31cde16ad, type: 3}
+  - name: cairn
+    sprite: {fileID: 21300000, guid: bb633322b9a79f34ebb007ce99dbe537, type: 3}
+  - name: play-ring
+    sprite: {fileID: 21300000, guid: 40612491922b004409b04f98e4a3fceb, type: 3}
+  - name: quarry-blocks
+    sprite: {fileID: 21300000, guid: a5d0f3b941dce3e4db9c049f21581129, type: 3}
+  - name: tool-rack
+    sprite: {fileID: 21300000, guid: 62a40814fc593ea4b8667d113cdfb50c, type: 3}
+  - name: spring-pool
+    sprite: {fileID: 21300000, guid: 73017601d834f314ab93b5d657936017, type: 3}
+  - name: rock-outcrop
+    sprite: {fileID: 21300000, guid: 088b0ab84b82cbf459f1d731cd2b2aef, type: 3}
+  - name: boulder-ridge
+    sprite: {fileID: 21300000, guid: 69bb5809a570e6c46b34b5599b590af5, type: 3}
+  - name: cliff-cave
+    sprite: {fileID: 21300000, guid: 933cdde9cbbf4c5478fd15af2a70c901, type: 3}
+  - name: stalagmites
+    sprite: {fileID: 21300000, guid: 4bf4cb4e3d5eaf74a95c6673e06eab3b, type: 3}
+  - name: red-pillar
+    sprite: {fileID: 21300000, guid: 725975ab4bbf4a446b5cf24d08c62824, type: 3}
+  - name: cave-crystals
+    sprite: {fileID: 21300000, guid: 1c47d4fd5b57ad04989e6c340456aa04, type: 3}
+  - name: cave-wall
+    sprite: {fileID: 21300000, guid: f90243598e0016548bcf50cee3f48090, type: 3}
+  - name: rubble
+    sprite: {fileID: 21300000, guid: f3f90e4f34dc13a43b04bf9937f980b9, type: 3}
+  - name: red-cracks
+    sprite: {fileID: 21300000, guid: 321c3601e35d3fa4b80de04cf23be620, type: 3}
+  - name: stele
+    sprite: {fileID: 21300000, guid: e7df39627b6dbda46a7833fa84c726ed, type: 3}
+  - name: steps
+    sprite: {fileID: 21300000, guid: 463057d2b17d1d149bcd6dffbeb9f0bd, type: 3}
+  - name: rock-column
+    sprite: {fileID: 21300000, guid: 2d2c1d91f255acf42a23604522e949c3, type: 3}
   icons:
   - name: bolt
     sprite: {fileID: 21300000, guid: 7cb5fc04a114d11488c7f97619d36c05, type: 3}
@@ -127,6 +189,8 @@ MonoBehaviour:
   - name: thorns
     sprite: {fileID: 21300000, guid: 80da9464fb592504b88b69f7274fa965, type: 3}
   portraits:
+  - name: fin
+    sprite: {fileID: 21300000, guid: 4e4e5cfedcb370d40b4a7236b1c6be13, type: 3}
   - name: mira
     sprite: {fileID: 21300000, guid: b9513ad3fe11d5440a75eb494bf3add3, type: 3}
   - name: orin
@@ -137,6 +201,14 @@ MonoBehaviour:
   stone: {fileID: 2800000, guid: fce57c72c31702e4b80dd0ec1a12af45, type: 3}
   spells: {fileID: 4900000, guid: e54c3020e60ada04fac0584b5742e3d2, type: 3}
   layout: {fileID: 4900000, guid: 51e14918dc18cec458cd7b1239de4868, type: 3}
+  chapters:
+  - id: root-boundary
+    layout: {fileID: 4900000, guid: 51e14918dc18cec458cd7b1239de4868, type: 3}
+    groundMaterial: {fileID: 2100000, guid: 8adef5309bf6a6141971d257aecebbde, type: 2}
+  - id: stone-village
+    layout: {fileID: 4900000, guid: e4ddef3fec050544080df74abe356813, type: 3}
+    groundMaterial: {fileID: 2100000, guid: cc4f30db3b83f984c81b34a3bbfd1622, type: 2}
+  appIcon: {fileID: 0}
   font: {fileID: 12800000, guid: 1abc091920043c849a3cedfb793fc8eb, type: 3}
   material: {fileID: 2100000, guid: 76d56ba025e5f58488339f40715b1e65, type: 2}
   groundMaterial: {fileID: 2100000, guid: 8adef5309bf6a6141971d257aecebbde, type: 2}

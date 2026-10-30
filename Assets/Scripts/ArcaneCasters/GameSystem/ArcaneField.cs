@@ -13,8 +13,12 @@ namespace ArcaneCasters.GameSystem {
     // (written by ArtSource/tools/make_layout.py). Ground paint, colliders, vegetation and the
     // positions of people, research targets and encounters all come from that one grid.
     public sealed class ArcaneField : MonoBehaviour {
+        // Forest: chapter 1 woods. Highland: chapter 2 rocky hills with a cave ('c' floor).
+        public enum Biome { Forest, Highland }
         private const int SplatPixelsPerCell = 8;
-        private static readonly string TerrainChars = "#.=~p%";
+        private static readonly string TerrainChars = "#.=~p%cr";
+        private Biome biome;
+        private Material groundMaterial;
 
         public int Width { get; private set; }
         public int Height { get; private set; }
@@ -31,11 +35,14 @@ namespace ArcaneCasters.GameSystem {
         private Texture2D splat;
         private Transform viewer;
 
-        public static ArcaneField Create(ArcaneAssets library, Transform parent) {
-            var field = new GameObject("Root Boundary field").AddComponent<ArcaneField>();
+        public static ArcaneField Create(ArcaneAssets library, Transform parent, string chapterId, Biome biome) {
+            var art = library.Chapter(chapterId);
+            var field = new GameObject(chapterId + " field").AddComponent<ArcaneField>();
             field.transform.SetParent(parent, false);
             field.assets = library;
-            field.Parse(library.layout.text);
+            field.biome = biome;
+            field.groundMaterial = art.groundMaterial ? art.groundMaterial : library.groundMaterial;
+            field.Parse((art.layout ? art.layout : library.layout).text);
             field.BuildGround();
             field.BuildColliders();
             field.BuildSeal();
@@ -78,7 +85,16 @@ namespace ArcaneCasters.GameSystem {
             if (seal) seal.SetActive(!open);
         }
 
-        private static bool Blocks(char cell) => cell == '#' || cell == '~';
+        private static bool Blocks(char cell) => cell == '#' || cell == '~' || cell == 'r';
+
+        public bool IsCave(Vector2 point) => TryCell(point, out int col, out int row) && terrain[row * Width + col] == 'c';
+
+        private bool NearCave(int col, int row, int reach) {
+            for (int r = row - reach; r <= row + reach; r++)
+                for (int c = col - reach; c <= col + reach; c++)
+                    if (r >= 0 && c >= 0 && r < Height && c < Width && terrain[r * Width + c] == 'c') return true;
+            return false;
+        }
 
         private void Parse(string text) {
             var lines = new List<string>();
@@ -113,7 +129,7 @@ namespace ArcaneCasters.GameSystem {
                     int c = col + dx, r = row + dy;
                     if (c < 0 || r < 0 || c >= Width || r >= Height) continue;
                     char around = raw[r * Width + c];
-                    if (".=p%".IndexOf(around) < 0) continue;
+                    if (".=p%c".IndexOf(around) < 0) continue;
                     counts[around] = counts.TryGetValue(around, out int n) ? n + 1 : 1;
                 }
             }
@@ -159,7 +175,7 @@ namespace ArcaneCasters.GameSystem {
             ground.AddComponent<RuntimeMeshOwner>().Owned = mesh;
             ground.AddComponent<MeshFilter>().sharedMesh = mesh;
             var render = ground.AddComponent<MeshRenderer>();
-            render.sharedMaterial = assets.groundMaterial;
+            render.sharedMaterial = groundMaterial;
             render.sortingOrder = ArcaneSorting.Ground;
             var block = new MaterialPropertyBlock();
             block.SetTexture("_Splat", splat);
@@ -183,6 +199,8 @@ namespace ArcaneCasters.GameSystem {
                 case 'p': return new Vector4(0, 0, 1, 0);
                 case '%': return new Vector4(0, 0, 1, 0);
                 case '#': return new Vector4(0, 0, 0, 1);
+                case 'c': return new Vector4(0, 0, 1, .35f);
+                case 'r': return new Vector4(0, 0, 1, .8f);
                 default: return Vector4.zero;
             }
         }
@@ -230,6 +248,7 @@ namespace ArcaneCasters.GameSystem {
             var box = seal.AddComponent<BoxCollider2D>();
             box.offset = new Vector2((minX + maxX) / 2f, y);
             box.size = new Vector2(maxX - minX, .9f);
+            if (biome == Biome.Highland) return; // the big stone golem itself holds this gate
             sealGlow = seal.AddComponent<LineRenderer>();
             sealGlow.sharedMaterial = assets.material;
             sealGlow.useWorldSpace = true;
@@ -245,6 +264,7 @@ namespace ArcaneCasters.GameSystem {
 
         // ---------- vegetation ----------
         private void BuildVegetation() {
+            if (biome == Biome.Highland) { BuildHighland(); return; }
             var root = new GameObject("Forest");
             root.transform.SetParent(transform, false);
             int[] distance = DistanceToWalkable();
@@ -279,6 +299,57 @@ namespace ArcaneCasters.GameSystem {
                     if (tree) canopies.Add(tree);
                 }
             }
+        }
+
+        // Rocky hills: pines and outcrops outside, dark walls and stalagmites around the cave.
+        private void BuildHighland() {
+            var root = new GameObject("Hills and cave");
+            root.transform.SetParent(transform, false);
+            int[] distance = DistanceToWalkable();
+            var placed = new List<Vector2>();
+            for (int row = 0; row < Height; row++) {
+                for (int col = 0; col < Width; col++) {
+                    char cell = terrain[row * Width + col];
+                    if (cell != '#' && cell != 'r') continue;
+                    int d = distance[row * Width + col];
+                    float roll = Hash(col, row, 1);
+                    Vector2 at = CellCenter(col, row) + new Vector2(Hash(col, row, 2) - .5f, Hash(col, row, 3) - .5f) * .5f;
+                    bool flip = Hash(col, row, 4) < .5f;
+                    if (cell == 'r' && !NearCave(col, row, 2)) {
+                        // Mountain body: a cliff of outcrops where it meets the hills, bare dark rock above.
+                        bool cliffEdge = OpenGroundBelow(col, row);
+                        if (cliffEdge && roll < .8f && !TooClose(placed, at, 1.3f)) { PlaceProp(roll < .4f ? "cave-wall" : "rock-outcrop", at, .9f, flip, solid: false, parent: root.transform); placed.Add(at); }
+                        else if (!cliffEdge && roll < .1f && !TooClose(placed, at, 2.5f)) { PlaceProp("rock-column", at, .8f, flip, solid: false, parent: root.transform); placed.Add(at); }
+                        continue;
+                    }
+                    if (NearCave(col, row, 2)) {
+                        if (d > 2 || roll > .7f || TooClose(placed, at, 1.2f)) continue;
+                        string[] cave = { "cave-wall", "stalagmites", "rock-column", "rubble", "cave-crystals" };
+                        string pick = cave[Mathf.Min(cave.Length - 1, (int)(Hash(col, row, 5) * cave.Length))];
+                        if (pick == "cave-crystals" && Hash(col, row, 6) > .35f) pick = "cave-wall";
+                        PlaceProp(pick, at, .85f, flip, solid: false, parent: root.transform);
+                        placed.Add(at);
+                        continue;
+                    }
+                    bool canopyOverOpenGround = OpenGroundAbove(col, row);
+                    if (d <= 2 && canopyOverOpenGround) {
+                        if (roll < .55f && !TooClose(placed, at, 1.1f)) { PlaceProp(roll < .2f ? "boulder-ridge" : "boulders", at, .8f, flip, solid: false, parent: root.transform); placed.Add(at); }
+                        continue;
+                    }
+                    if (roll > (d <= 2 ? .75f : .55f) || TooClose(placed, at, d <= 2 ? 1.5f : 1.9f)) continue;
+                    var kind = Hash(col, row, 7) < .55f ? "tree-pine" : "rock-outcrop";
+                    var prop = PlaceProp(kind, at, .85f + Hash(col, row, 8) * .25f, flip, solid: false, parent: root.transform);
+                    if (prop && kind == "tree-pine") canopies.Add(prop);
+                    placed.Add(at);
+                }
+            }
+        }
+
+        private bool OpenGroundBelow(int col, int row) {
+            for (int r = row + 1; r <= row + 2; r++)
+                for (int c = col - 1; c <= col + 1; c++)
+                    if (r < Height && c >= 0 && c < Width && !Blocks(terrain[r * Width + c]) && terrain[r * Width + c] != 'c') return true;
+            return false;
         }
 
         private bool OpenGroundAbove(int col, int row) {
@@ -328,6 +399,7 @@ namespace ArcaneCasters.GameSystem {
 
         // ---------- props ----------
         private void BuildProps() {
+            if (biome == Biome.Highland) { BuildVillageProps(); return; }
             var root = new GameObject("Camp and ruins");
             root.transform.SetParent(transform, false);
             var parent = root.transform;
@@ -345,6 +417,44 @@ namespace ArcaneCasters.GameSystem {
                 PlaceDecal("thorns", vine + new Vector2(0, .1f), 1.6f, parent);
                 PlaceProp("bush", vine + new Vector2(0, .25f), .9f, false, solid: true, size: new Vector2(.9f, .4f), parent: parent);
             }
+        }
+
+        private void BuildVillageProps() {
+            var root = new GameObject("Village and cave");
+            root.transform.SetParent(transform, false);
+            var parent = root.transform;
+            PlaceAll('H', "stone-hut", 1f, parent, new Vector2(1.9f, .7f));
+            PlaceAll('A', "cairn", 1f, parent, new Vector2(.6f, .35f));
+            PlaceAll('I', "quarry-blocks", 1f, parent, new Vector2(1.3f, .55f));
+            PlaceAll('T', "tool-rack", 1f, parent, new Vector2(1.0f, .3f));
+            var stones = Markers('o');
+            if (stones.Count > 0) {
+                Vector2 middle = Vector2.zero;
+                foreach (var stone in stones) middle += stone;
+                PlaceFlat("play-ring", middle / stones.Count + Vector2.down * .2f, 3.4f, parent);
+            }
+            foreach (var mouth in Markers('M')) PlaceProp("cliff-cave", mouth + Vector2.down * .35f, 1.15f, false, solid: false, parent: parent);
+            // Spring pool art over the water cells by the east observation spot.
+            foreach (var golem in Markers('S')) PlaceFlat("spring-pool", golem + new Vector2(2.6f, .2f), 3.2f, parent);
+            foreach (var door in Markers('D')) {
+                PlaceProp("stele", door + new Vector2(-2.6f, -.4f), .9f, false, solid: true, size: new Vector2(.9f, .4f), parent: parent);
+                PlaceProp("stele", door + new Vector2(2.6f, -.4f), .9f, true, solid: true, size: new Vector2(.9f, .4f), parent: parent);
+                PlaceFlat("red-cracks", door + new Vector2(0, -2.2f), 2.6f, parent);
+            }
+            foreach (var spot in Markers('3')) PlaceFlat("red-cracks", spot + Vector2.down * .3f, 1.6f, parent);
+            foreach (var spot in Markers('1')) PlaceFlat("red-cracks", spot + Vector2.down * .3f, 1.4f, parent);
+        }
+
+        private void PlaceFlat(string prop, Vector2 at, float width, Transform parent) {
+            var sprite = assets.Prop(prop);
+            if (!sprite) return;
+            var render = new GameObject(prop).AddComponent<SpriteRenderer>();
+            render.transform.SetParent(parent, false);
+            render.transform.position = at;
+            render.sprite = sprite;
+            render.sharedMaterial = assets.material;
+            render.transform.localScale = Vector3.one * (width / Mathf.Max(sprite.bounds.size.x, .01f));
+            render.sortingOrder = ArcaneSorting.GroundDecal + 5;
         }
 
         private void PlaceAll(char key, string sprite, float scale, Transform parent, Vector2 footprint) {

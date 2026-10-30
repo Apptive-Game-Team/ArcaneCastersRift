@@ -21,15 +21,15 @@ namespace ArcaneCasters.GameSystem {
         public Vector2 BodyPosition => Body ? (Vector2)Body.bounds.center : (Vector2)transform.position;
         public Bounds BodyBounds => Body ? Body.bounds : new Bounds(transform.position, Vector3.one);
 
-        // set: "mira" (directional), or a strip name such as "enemy-imp" or "orin".
+        // set: a directional character ("mira", "fin": uses <set>-down/side/up), or a strip such as "enemy-imp".
         public void Init(ArcaneAssets assets, string set, float altitude = 0, bool facesRight = false) {
             Altitude = altitude;
             artFacesRight = facesRight;
-            directional = set == "mira";
+            directional = assets.Frames(set + "-down").Length > 0;
             if (directional) {
-                down = assets.Frames("mira-down");
-                side = assets.Frames("mira-side");
-                up = assets.Frames("mira-up");
+                down = assets.Frames(set + "-down");
+                side = assets.Frames(set + "-side");
+                up = assets.Frames(set + "-up");
                 frames = down;
             } else {
                 frames = assets.Frames(set);

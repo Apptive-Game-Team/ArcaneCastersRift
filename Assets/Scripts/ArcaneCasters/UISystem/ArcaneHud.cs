@@ -50,6 +50,7 @@ namespace ArcaneCasters.UISystem {
 
         private IEnumerator Start() {
             yield return null;
+            if (Session.Chapter == null || !Session.Player) yield break; // the session is switching to another chapter scene
             white = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 4, 4), Vector2.one * .5f);
             triangle = MakeTriangle();
             vignetteSprite = MakeVignette();
@@ -74,6 +75,7 @@ namespace ArcaneCasters.UISystem {
             BuildDialogue();
             BuildJournal();
             BuildPause();
+            BuildEnding();
 
             Session.OnToast += ShowToast;
             Session.OnDialogue += ShowDialogue;
@@ -81,6 +83,7 @@ namespace ArcaneCasters.UISystem {
             Session.OnPlayerHurt += Hurt;
             Session.OnPlayerDown += ShowDeath;
             Session.OnPlayerRespawn += HideDeath;
+            Session.OnEnding += ShowEnding;
             Session.Player.Status.AddListener(this);
             OnChanged(Session.Player);
             Controls.ToggleBook = ToggleJournal;
@@ -95,9 +98,9 @@ namespace ArcaneCasters.UISystem {
             var window = Panel(panel, "Portrait window", new Vector2(8, 8), new Vector2(60, 60), NavyLight, TopLeft);
             window.gameObject.AddComponent<RectMask2D>();
             var face = Img(window, "Portrait", new Vector2(-56, -31), new Vector2(150, 139), Color.white, TopLeft);
-            face.sprite = Session.Assets.Portrait("mira");
+            face.sprite = Session.Chapter.Portrait(Session.Chapter.PlayerName);
             face.preserveAspect = true;
-            Label(panel, ArcaneSession.Mira, new Vector2(80, 8), new Vector2(120, 22), 17, Orange, TopLeft);
+            Label(panel, Session.Chapter.PlayerName, new Vector2(80, 8), new Vector2(120, 22), 17, Orange, TopLeft);
             levelText = Label(panel, "", new Vector2(190, 10), new Vector2(84, 20), 13, Muted, TopLeft, TextAnchor.UpperRight);
             healthFill = Bar(panel, new Vector2(80, 34), new Vector2(194, 14), Health);
             healthText = Label(healthFill.transform.parent, "", new Vector2(0, -1), new Vector2(194, 16), 11, Color.white, TopLeft, TextAnchor.MiddleCenter);
@@ -273,13 +276,20 @@ namespace ArcaneCasters.UISystem {
             var shade = Img(canvas, "Pause shade", Vector2.zero, Vector2.zero, new Color(0, 0, 0, .45f), Stretch());
             shade.raycastTarget = true;
             pause = shade.gameObject;
-            var panel = Panel(shade.rectTransform, "Pause", new Vector2(-200, -200), new Vector2(400, 400), Navy, Center);
+            var panel = Panel(shade.rectTransform, "Pause", new Vector2(-200, -200), new Vector2(400, 520), Navy, Center);
             Outline(panel, NavyLine);
             Label(panel, "일시 정지", new Vector2(0, 22), new Vector2(400, 36), 26, Color.white, TopLeft, TextAnchor.MiddleCenter);
             Button(panel, "계속하기", new Vector2(50, 76), new Vector2(300, 42), TogglePause, Orange).GetComponentInChildren<Text>().color = new Color32(13, 34, 56, 255);
             Button(panel, "저장하고 종료", new Vector2(50, 128), new Vector2(300, 42), () => { Session.Save(); Application.Quit(); }, NavyLight);
+            Label(panel, "기록 선택", new Vector2(50, 186), new Vector2(300, 20), 13, Muted, TopLeft);
+            for (int i = 0; i < ArcaneSession.Chapters.Length; i++) {
+                var chapter = ArcaneSession.Chapters[i];
+                bool current = chapter.id == Session.ChapterId;
+                Button(panel, chapter.title + (current ? "  ·  지금" : ""), new Vector2(50, 208 + i * 44), new Vector2(300, 38), () => Session.LoadChapter(chapter.id), current ? new Color32(40, 76, 112, 255) : NavyLight);
+            }
+            Button(panel, "이 장 처음부터 다시", new Vector2(50, 300), new Vector2(300, 34), () => Session.RestartChapter(), new Color32(70, 40, 40, 255));
             Label(panel, "WASD  이동\n마우스  조준 · 좌클릭 마력탄\nQ · E(우클릭) · 1  장착한 마법\nSpace  회피      F  조사 · 대화\nR  회복약      K  마법 연구      Esc  일시 정지",
-                new Vector2(36, 194), new Vector2(330, 180), 14, Muted, TopLeft).lineSpacing = 1.35f;
+                new Vector2(36, 350), new Vector2(330, 160), 13, Muted, TopLeft).lineSpacing = 1.3f;
             pause.SetActive(false);
         }
 
@@ -307,7 +317,7 @@ namespace ArcaneCasters.UISystem {
         }
 
         private void RefreshUiMode() {
-            Session.UiMode = dialoguePanel.activeSelf ? "dialogue" : journal.activeSelf ? "journal" : pause.activeSelf ? "pause" : "play";
+            Session.UiMode = dialoguePanel.activeSelf ? "dialogue" : journal.activeSelf ? "journal" : pause.activeSelf ? "pause" : ending && ending.activeSelf ? "ending" : "play";
         }
 
         private void UpdateSlots(ArcaneCaster player) {
@@ -401,6 +411,8 @@ namespace ArcaneCasters.UISystem {
             afterDialogue = then;
             pageCount = lines.Count;
             pageIndex = 0;
+            conversationOther = null;
+            foreach (var line in lines) if (line.Speaker != Session.Chapter.PlayerName) { conversationOther = line.Speaker; break; }
             dialoguePanel.SetActive(true);
             dim.SetActive(true);
             Session.Pause(true);
@@ -411,15 +423,18 @@ namespace ArcaneCasters.UISystem {
         private void NextLine() {
             var line = pending.Dequeue();
             pageIndex++;
-            bool orinSpeaks = line.Speaker == ArcaneSession.Orin;
-            leftPortrait.sprite = Session.Assets.Portrait("mira");
-            rightPortrait.sprite = Session.Assets.Portrait("orin");
-            bool orinInScene = orinSpeaks || ConversationHasOrin();
+            // The player character stands on the left; whoever they talk to stands on the right.
+            bool otherSpeaks = line.Speaker != Session.Chapter.PlayerName;
+            if (otherSpeaks) conversationOther = line.Speaker;
+            leftPortrait.sprite = Session.Chapter.Portrait(Session.Chapter.PlayerName);
+            var otherPortrait = conversationOther != null ? Session.Chapter.Portrait(conversationOther) : null;
+            rightPortrait.sprite = otherPortrait;
+            bool orinInScene = otherPortrait;
             rightPortrait.enabled = orinInScene;
-            leftPortrait.color = orinSpeaks ? new Color(.55f, .6f, .7f) : Color.white;
-            rightPortrait.color = orinSpeaks ? Color.white : new Color(.55f, .6f, .7f);
+            leftPortrait.color = otherSpeaks ? new Color(.55f, .6f, .7f) : Color.white;
+            rightPortrait.color = otherSpeaks ? Color.white : new Color(.55f, .6f, .7f);
             float textX = 300;
-            speakerPlate.anchoredPosition = new Vector2(orinSpeaks ? 520 : textX, 16);
+            speakerPlate.anchoredPosition = new Vector2(otherSpeaks && orinInScene ? 520 : textX, 16);
             speakerText.text = line.Speaker;
             speechRect.anchoredPosition = new Vector2(textX, -40);
             speechRect.sizeDelta = new Vector2(orinInScene ? 340 : 600, 80);
@@ -429,13 +444,58 @@ namespace ArcaneCasters.UISystem {
             Session.SetSpeaker(line.Speaker);
         }
 
-        private bool orinInConversation;
-        private bool ConversationHasOrin() {
-            if (pageIndex == 1) {
-                orinInConversation = false;
-                foreach (var line in pending) if (line.Speaker == ArcaneSession.Orin) orinInConversation = true;
+        private string conversationOther;
+
+        // ---------- chapter ending ----------
+        private GameObject ending;
+        private Text endingVoice, endingTitle, endingSubtitle;
+        private GameObject endingButtons;
+
+        private void BuildEnding() {
+            var shade = Img(canvas, "Ending", Vector2.zero, Vector2.zero, new Color(.08f, .01f, .02f, 0), Stretch());
+            shade.raycastTarget = true;
+            ending = shade.gameObject;
+            endingVoice = Label(shade.rectTransform, "", new Vector2(-400, -40), new Vector2(800, 80), 34, new Color(1f, .35f, .3f), Center, TextAnchor.MiddleCenter);
+            var glow = endingVoice.gameObject.AddComponent<Outline>();
+            glow.effectColor = new Color(.35f, 0, 0, .9f);
+            glow.effectDistance = new Vector2(2, -2);
+            endingTitle = Label(shade.rectTransform, "", new Vector2(-400, -70), new Vector2(800, 50), 30, Color.white, Center, TextAnchor.MiddleCenter);
+            endingSubtitle = Label(shade.rectTransform, "", new Vector2(-400, -10), new Vector2(800, 30), 18, Orange, Center, TextAnchor.MiddleCenter);
+            var buttons = Panel(shade.rectTransform, "Ending buttons", new Vector2(-310, 60), new Vector2(620, 44), new Color(0, 0, 0, 0), Center);
+            endingButtons = buttons.gameObject;
+            Button(buttons, "1장 미라의 기록으로", Vector2.zero, new Vector2(300, 44), () => Session.LoadChapter(RootBoundaryChapter.ChapterId), Orange).GetComponentInChildren<Text>().color = new Color32(13, 34, 56, 255);
+            Button(buttons, "이 장 처음부터", new Vector2(320, 0), new Vector2(300, 44), () => Session.RestartChapter(), NavyLight);
+            ending.SetActive(false);
+        }
+
+        private void ShowEnding(string voice, string title, string subtitle) {
+            if (dialoguePanel.activeSelf) { dialoguePanel.SetActive(false); dim.SetActive(false); }
+            StartCoroutine(PlayEnding(voice, title, subtitle));
+        }
+
+        private IEnumerator PlayEnding(string voice, string title, string subtitle) {
+            ending.SetActive(true);
+            endingButtons.SetActive(false);
+            endingTitle.text = endingSubtitle.text = "";
+            endingVoice.text = voice;
+            Session.Pause(true);
+            RefreshUiMode();
+            var back = ending.GetComponent<Image>();
+            for (float t = 0; t < 1.6f; t += Time.unscaledDeltaTime) {
+                back.color = new Color(.18f, .01f, .03f, Mathf.Lerp(0, .78f, t / 1.6f));
+                endingVoice.color = new Color(1f, .35f, .3f, Mathf.Clamp01(t / .8f));
+                yield return null;
             }
-            return orinInConversation;
+            yield return new WaitForSecondsRealtime(1.8f);
+            for (float t = 0; t < 1.2f; t += Time.unscaledDeltaTime) {
+                back.color = Color.Lerp(new Color(.18f, .01f, .03f, .78f), new Color(.02f, .03f, .06f, .96f), t / 1.2f);
+                endingVoice.color = new Color(1f, .35f, .3f, 1 - t / 1.2f);
+                yield return null;
+            }
+            endingVoice.text = "";
+            endingTitle.text = title;
+            endingSubtitle.text = subtitle;
+            endingButtons.SetActive(true);
         }
 
         private void AdvanceDialogue() {
@@ -647,6 +707,7 @@ namespace ArcaneCasters.UISystem {
             Session.OnPlayerHurt -= Hurt;
             Session.OnPlayerDown -= ShowDeath;
             Session.OnPlayerRespawn -= HideDeath;
+            Session.OnEnding -= ShowEnding;
         }
     }
 }

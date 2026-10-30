@@ -26,6 +26,8 @@ namespace ArcaneCasters.DataSystem {
     public sealed class ArcaneSave {
         public int version = 1, level = 1, experience, research, phase;
         public bool brook, rocks, vine, briefed;
+        public int step;                       // chapter-specific sub-progress, such as cleared waves
+        public string[] flags = Array.Empty<string>();
         public int[] ranks = { 1, 1, 0, 0, 0, 0, 1 };
         public int[] slots = { -1, 1, -1 };
         public string[] defeated = Array.Empty<string>();
@@ -47,9 +49,11 @@ namespace ArcaneCasters.DataSystem {
                 int id = Save.slots[i];
                 if (id < 1 || id > 5 || Save.ranks[id] == 0 || Array.IndexOf(Save.slots, id) < i) Save.slots[i] = -1;
             }
-            Save.level = Mathf.Clamp(Save.level, 1, 99); Save.phase = Mathf.Clamp(Save.phase, 0, 5);
+            Save.level = Mathf.Clamp(Save.level, 1, 99); Save.phase = Mathf.Clamp(Save.phase, 0, 6);
             Save.research = Mathf.Clamp(Save.research, 0, 10000); Save.experience = Mathf.Clamp(Save.experience, 0, 100000);
             Save.defeated ??= Array.Empty<string>();
+            Save.flags ??= Array.Empty<string>();
+            Save.phase = Mathf.Clamp(Save.phase, 0, 6);
         }
         public int Rank(ArcaneSpell spell) => spell >= ArcaneSpell.Bolt && spell <= ArcaneSpell.Dash ? Save.ranks[(int)spell] : 0;
         public SpellDefinition Definition(ArcaneSpell spell) => Catalog.spells[(int)spell];
