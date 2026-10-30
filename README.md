@@ -18,6 +18,12 @@ Windows 개발 빌드는 `Arcane Casters > Build Windows` 메뉴로 만듭니다
 출력은 `Build/ArcaneCastersRift/ArcaneCastersRift.exe`이고, 같은 폴더의 Data, DLL, MonoBleedingEdge 파일을 함께 보관해야 합니다.
 게임명은 Arcane Casters이며 저장소와 출력 경로의 Rift는 초기 작업명입니다.
 
+## 배포
+
+GitHub에서 release를 publish하면 `.github/workflows/release.yml`이 Windows·macOS 빌드를 만들어 `ArcaneCasters-<tag>-Windows.zip`, `ArcaneCasters-<tag>-macOS.zip`으로 그 release에 올리고, release 본문에 다운로드 표를 붙입니다.
+Actions의 Release Build를 tag 없이 수동 실행하면 release 없이 빌드만 만들어 workflow artifact로 7일 보관합니다.
+저장소 secret `UNITY_LICENSE`(Unity Personal license 파일 내용), `UNITY_EMAIL`, `UNITY_PASSWORD`가 필요합니다. Personal license 파일은 만료일이 있어서, 만료되면 Unity Hub에서 다시 활성화한 뒤 `C:\ProgramData\Unity\Unity_lic.ulf` 내용으로 `UNITY_LICENSE`를 갱신합니다.
+
 ## 조작
 
 | 키 | 동작 |
