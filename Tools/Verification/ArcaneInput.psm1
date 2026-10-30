@@ -156,7 +156,7 @@ function Start-ArcaneGame {
     if (Test-Path -LiteralPath $telemetry) { throw 'OutDir already contains telemetry.jsonl. Use a fresh output directory.' }
     Write-ArcaneLog "Start-ArcaneGame Exe=$executable OutDir=$script:OutputDirectory"
     # ProcessStartInfo on .NET Framework accepts one Windows command line.
-    $arguments = @('-screen-fullscreen', '0', '-screen-width', '1280', '-screen-height', '720', '--arcane-telemetry', $telemetry) + $ExtraArgs
+    $arguments = @('-screen-fullscreen', '0', '-screen-width', '1280', '-screen-height', '720', '--arcane-telemetry', $telemetry, '-logFile', (Join-Path $script:OutputDirectory 'player.log')) + $ExtraArgs
     $quoted = foreach ($argument in $arguments) {
         '"' + ([regex]::Replace([regex]::Replace($argument, '(\\*)"', '$1$1\"'), '(\\+)$', '$1$1')) + '"'
     }
