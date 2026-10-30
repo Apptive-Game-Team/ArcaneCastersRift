@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ArcaneCasters.DataSystem;
@@ -11,81 +12,217 @@ using UnityEditor.Build.Reporting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 
 namespace ArcaneCasters.Editor {
+    // Imports the first-field art with its measured frame data and writes the scene.
+    // The scene holds only the session, camera and input; the field itself is built at
+    // runtime from Assets/ArcaneCasters/Data/root-boundary.txt by ArcaneField.
     public static class ArcaneProjectBuilder {
-        public const string ScenePath="Assets/Scenes/ArcaneCasters/RootBoundary.unity";
-        private const string Root="Assets/ArcaneCasters";
-        [MenuItem("Arcane Casters/Create or Open First Field")]
-        public static void Build(){
+        public const string ScenePath = "Assets/Scenes/ArcaneCasters/RootBoundary.unity";
+        private const string Root = "Assets/ArcaneCasters";
+        private const string Art = Root + "/Art";
+        private const float CharacterPixelsPerUnit = 128;
+
+        // World height of each prop in units; pixels per unit follow from the image height.
+        private static readonly Dictionary<string, (float height, float pivotY)> PropSizes = new Dictionary<string, (float, float)> {
+            { "tree-broad", (4.4f, .05f) }, { "tree-pine", (5.0f, .04f) }, { "bush", (1.25f, .12f) }, { "boulders", (1.4f, .14f) },
+            { "tent", (2.3f, .1f) }, { "campfire", (1.0f, .2f) }, { "bench", (.85f, .18f) }, { "world-root", (2.7f, .12f) },
+            { "crystals", (1.6f, .14f) }, { "signpost", (2.2f, .06f) }, { "ruin-arch", (3.3f, .08f) }, { "ruin-pillar", (2.6f, .08f) },
+            { "rune-stone", (1.7f, .1f) },
+        };
+
+        [Serializable] private sealed class StripInfo { public int[] cell; public float[] pivot; public string[] names; }
+
+        [MenuItem("Arcane Casters/Import Art and Rebuild First Field")]
+        public static void Build() {
             Directory.CreateDirectory("Assets/Scenes/ArcaneCasters");
-            var atlasPath=Root+"/Art/field-atlas.png";
-            var importer=(TextureImporter)AssetImporter.GetAtPath(atlasPath);
-            importer.textureType=TextureImporterType.Sprite;importer.spriteImportMode=SpriteImportMode.Multiple;importer.alphaIsTransparency=true;importer.mipmapEnabled=false;importer.maxTextureSize=2048;importer.textureCompression=TextureImporterCompression.Uncompressed;
-            var texture=AssetDatabase.LoadAssetAtPath<Texture2D>(atlasPath);float width=texture.width/4f,height=texture.height/4f;
-            var metadata=new SpriteMetaData[16];
-            for(int row=0;row<4;row++)for(int col=0;col<4;col++)metadata[row*4+col]=new SpriteMetaData{name="cell_"+(row*4+col).ToString("00"),rect=new Rect(col*width,(3-row)*height,width,height),alignment=(int)SpriteAlignment.Center,pivot=Vector2.one*.5f};
-            importer.spritesheet=metadata;importer.SaveAndReimport();
-            var sprites=AssetDatabase.LoadAllAssetsAtPath(atlasPath).OfType<Sprite>().OrderBy(s=>s.name).ToArray();
-            var groundPath=Root+"/Art/root-forest.png";var groundImporter=(TextureImporter)AssetImporter.GetAtPath(groundPath);
-            groundImporter.textureType=TextureImporterType.Sprite;groundImporter.spriteImportMode=SpriteImportMode.Single;groundImporter.maxTextureSize=2048;groundImporter.mipmapEnabled=false;groundImporter.textureCompression=TextureImporterCompression.Uncompressed;groundImporter.SaveAndReimport();
-            var assets=AssetDatabase.LoadAssetAtPath<ArcaneAssets>(Root+"/FieldAssets.asset");
-            if(!assets){assets=ScriptableObject.CreateInstance<ArcaneAssets>();AssetDatabase.CreateAsset(assets,Root+"/FieldAssets.asset");}
-            var material=AssetDatabase.LoadAssetAtPath<Material>(Root+"/FieldUnlit.mat");
-            if(!material){material=new Material(Shader.Find("Sprites/Default"));AssetDatabase.CreateAsset(material,Root+"/FieldUnlit.mat");}
-            assets.material=material;assets.font=AssetDatabase.LoadAssetAtPath<Font>(Root+"/Art/Jua-Regular.ttf");assets.spells=AssetDatabase.LoadAssetAtPath<TextAsset>(Root+"/Data/spells.json");
-            string[] names={"imp","wisp","golem","warden","tree","gold-tree","ruin","rock"};
-            assets.art=names.Select((name,index)=>new ArcaneAssets.Art{name=name,sprite=sprites[index+8]}).Concat(new[]{new ArcaneAssets.Art{name="orin",sprite=ImportPortrait()}}).ToArray();
-            var mageFrames=ImportMage();assets.mageFrames=new Sprite[32];
-            for(int row=0;row<4;row++)for(int col=0;col<8;col++)assets.mageFrames[row*8+col]=mageFrames[(row==1||row==3?8:0)+col];
-            EditorUtility.SetDirty(assets);AssetDatabase.SaveAssets();
-            if(File.Exists(ScenePath)){EditorSceneManager.OpenScene(ScenePath);Debug.Log("ARCANE_SCENE_EXISTS: existing scene preserved");return;}
-            var scene=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
-            var root=new GameObject("Arcane field session");var session=root.AddComponent<ArcaneSession>();session.Assets=assets;
-            var input=root.AddComponent<ArcaneInput>();input.Session=session;var hud=root.AddComponent<ArcaneHud>();hud.Session=session;hud.Controls=input;
-            new GameObject("Input bindings").AddComponent<InputManager>();
-            var events=new GameObject("UI events");events.AddComponent<EventSystem>();events.AddComponent<StandaloneInputModule>();
-            var cameraGo=new GameObject("Main Camera");cameraGo.tag="MainCamera";var camera=cameraGo.AddComponent<Camera>();camera.orthographic=true;camera.orthographicSize=5.2f;camera.backgroundColor=new Color(.035f,.09f,.1f);cameraGo.AddComponent<AudioListener>();cameraGo.transform.position=new Vector3(-10,-6,-10);cameraGo.AddComponent<ArcaneCamera>().Session=session;
-            var ground=new GameObject("Painted forest floor").AddComponent<SpriteRenderer>();ground.sprite=AssetDatabase.LoadAssetAtPath<Sprite>(groundPath);ground.sharedMaterial=material;ground.sortingOrder=-20000;ground.transform.localScale=new Vector3(40/ground.sprite.bounds.size.x,26.6667f/ground.sprite.bounds.size.y,1);
-            var walls=new GameObject("Forest boundaries • collision");
-            for(int row=0;row<54;row++){
-                int start=-1;
-                for(int col=0;col<=80;col++){
-                    bool blocked=col<80&&!Walkable(new Vector2(-19.75f+col*.5f,-13.25f+row*.5f));
-                    if(blocked&&start<0)start=col;
-                    if(!blocked&&start>=0){var wall=new GameObject("Root bank");wall.transform.SetParent(walls.transform);wall.layer=LayerMask.NameToLayer("Wall");wall.transform.position=new Vector2(-20+(start+col)*.25f,-13.25f+row*.5f);wall.AddComponent<BoxCollider2D>().size=new Vector2((col-start)*.5f,.5f);start=-1;}
-                }
+            AssetDatabase.Refresh();
+            var assets = AssetDatabase.LoadAssetAtPath<ArcaneAssets>(Root + "/FieldAssets.asset");
+            if (!assets) { assets = ScriptableObject.CreateInstance<ArcaneAssets>(); AssetDatabase.CreateAsset(assets, Root + "/FieldAssets.asset"); }
+            assets.material = SpriteMaterial();
+            assets.groundMaterial = GroundMaterial(out assets.grass, out assets.dirt, out assets.water, out assets.stone);
+            assets.font = AssetDatabase.LoadAssetAtPath<Font>(Art + "/Jua-Regular.ttf");
+            assets.spells = AssetDatabase.LoadAssetAtPath<TextAsset>(Root + "/Data/spells.json");
+            assets.layout = AssetDatabase.LoadAssetAtPath<TextAsset>(Root + "/Data/root-boundary.txt");
+            assets.frameSets = Directory.GetFiles(Art + "/Characters", "*.png").Concat(Directory.GetFiles(Art + "/Creatures", "*.png"))
+                .Select(path => path.Replace('\\', '/')).OrderBy(path => path)
+                .Select(path => new ArcaneAssets.FrameSet { name = Path.GetFileNameWithoutExtension(path), frames = ImportStrip(path) }).ToArray();
+            assets.props = PropSizes.Keys.Select(name => new ArcaneAssets.Art { name = name, sprite = ImportProp(name) }).ToArray();
+            assets.effects = ImportFolder(Art + "/Effects", 256, new Vector2(.5f, .5f));
+            assets.icons = ImportFolder(Art + "/Icons", 100, new Vector2(.5f, .5f));
+            assets.portraits = ImportFolder(Art + "/Portraits", 100, new Vector2(.5f, 0));
+            foreach (var set in assets.frameSets) if (set.frames.Length == 0) throw new InvalidOperationException("No frames for " + set.name);
+            if (!assets.layout) throw new InvalidOperationException("Missing layout " + Root + "/Data/root-boundary.txt");
+            EditorUtility.SetDirty(assets);
+            AssetDatabase.SaveAssets();
+            WriteScene(assets);
+            Debug.Log("ARCANE_BUILD_SCENE_OK");
+        }
+
+        private static Material SpriteMaterial() {
+            var material = AssetDatabase.LoadAssetAtPath<Material>(Root + "/FieldUnlit.mat");
+            if (!material) { material = new Material(Shader.Find("Sprites/Default")); AssetDatabase.CreateAsset(material, Root + "/FieldUnlit.mat"); }
+            return material;
+        }
+
+        private static Material GroundMaterial(out Texture2D grass, out Texture2D dirt, out Texture2D water, out Texture2D stone) {
+            grass = ImportGround("grass");
+            dirt = ImportGround("dirt");
+            water = ImportGround("water");
+            stone = ImportGround("stone");
+            var shader = Shader.Find("ArcaneCasters/GroundSplat");
+            if (!shader) throw new InvalidOperationException("GroundSplat shader did not compile");
+            string path = Root + "/FieldGround.mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (!material) { material = new Material(shader); AssetDatabase.CreateAsset(material, path); }
+            material.shader = shader;
+            material.SetTexture("_Grass", grass);
+            material.SetTexture("_Dirt", dirt);
+            material.SetTexture("_Water", water);
+            material.SetTexture("_Stone", stone);
+            material.SetFloat("_Tiling", 4f);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        private static Texture2D ImportGround(string name) {
+            string path = Art + "/Ground/" + name + ".png";
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            importer.textureType = TextureImporterType.Default;
+            importer.wrapMode = TextureWrapMode.Repeat;
+            importer.mipmapEnabled = true;
+            importer.filterMode = FilterMode.Trilinear;
+            importer.anisoLevel = 2;
+            importer.maxTextureSize = 512;
+            importer.textureCompression = TextureImporterCompression.CompressedHQ;
+            importer.SaveAndReimport();
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+        }
+
+        // Strips come from ArtSource/tools/sprite_sheet.py: equal cells, measured ground pivot.
+        private static Sprite[] ImportStrip(string path) {
+            string jsonPath = path.Substring(0, path.Length - 4) + ".frames.json";
+            var info = JsonUtility.FromJson<StripInfo>(File.ReadAllText(jsonPath));
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            SpriteSettings(importer, CharacterPixelsPerUnit, TextureImporterCompression.Uncompressed);
+            importer.spriteImportMode = SpriteImportMode.Multiple;
+            string baseName = Path.GetFileNameWithoutExtension(path);
+            var cells = new SpriteMetaData[info.names.Length];
+            for (int i = 0; i < cells.Length; i++) {
+                cells[i] = new SpriteMetaData {
+                    name = baseName + "_" + i + "_" + info.names[i],
+                    rect = new Rect(i * info.cell[0], 0, info.cell[0], info.cell[1]),
+                    alignment = (int)SpriteAlignment.Custom,
+                    pivot = new Vector2(info.pivot[0], info.pivot[1]),
+                };
             }
-            EditorSceneManager.SaveScene(scene,ScenePath);EditorBuildSettings.scenes=new[]{new EditorBuildSettingsScene(ScenePath,true)};
-            PlayerSettings.productName="Arcane Casters";PlayerSettings.companyName="Apptive Game Team";PlayerSettings.defaultScreenWidth=1280;PlayerSettings.defaultScreenHeight=720;PlayerSettings.runInBackground=true;
-            AssetDatabase.SaveAssets();Debug.Log("ARCANE_BUILD_SCENE_OK");
+#pragma warning disable 618
+            importer.spritesheet = cells;
+#pragma warning restore 618
+            importer.SaveAndReimport();
+            var sprites = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Sprite>().ToArray();
+            return info.names.Select((name, i) => sprites.First(s => s.name == baseName + "_" + i + "_" + name)).ToArray();
         }
-        private static Sprite ImportPortrait(){
-            string path=Root+"/Art/orin.png";var importer=(TextureImporter)AssetImporter.GetAtPath(path);if(importer==null)return null;
-            importer.textureType=TextureImporterType.Sprite;importer.spriteImportMode=SpriteImportMode.Single;importer.spritePixelsPerUnit=1000;importer.alphaIsTransparency=true;importer.mipmapEnabled=false;importer.SaveAndReimport();return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+
+        private static Sprite ImportProp(string name) {
+            string path = Art + "/Props/" + name + ".png";
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            int height = ImageHeight(path);
+            var (worldHeight, pivotY) = PropSizes[name];
+            SpriteSettings(importer, height / worldHeight, TextureImporterCompression.CompressedHQ);
+            importer.spriteImportMode = SpriteImportMode.Single;
+            var settings = new TextureImporterSettings();
+            importer.ReadTextureSettings(settings);
+            settings.spriteAlignment = (int)SpriteAlignment.Custom;
+            settings.spritePivot = new Vector2(.5f, pivotY);
+            importer.SetTextureSettings(settings);
+            importer.SaveAndReimport();
+            return AssetDatabase.LoadAssetAtPath<Sprite>(path);
         }
-        private static Sprite[] ImportMage(){
-            string path=Root+"/Art/mage-directions.png";var importer=(TextureImporter)AssetImporter.GetAtPath(path);
-            importer.textureType=TextureImporterType.Sprite;importer.spriteImportMode=SpriteImportMode.Multiple;importer.maxTextureSize=4096;importer.alphaIsTransparency=true;importer.mipmapEnabled=false;importer.textureCompression=TextureImporterCompression.Uncompressed;
-            var texture=AssetDatabase.LoadAssetAtPath<Texture2D>(path);float w=texture.width/8f,h=texture.height/2f;var cells=new SpriteMetaData[16];
-            for(int row=0;row<2;row++)for(int col=0;col<8;col++)cells[row*8+col]=new SpriteMetaData{name="mage_"+(row*8+col).ToString("00"),rect=new Rect(col*w,(1-row)*h,w,h),alignment=(int)SpriteAlignment.Center,pivot=Vector2.one*.5f};
-            importer.spritesheet=cells;importer.SaveAndReimport();return AssetDatabase.LoadAllAssetsAtPath(path).OfType<Sprite>().OrderBy(s=>s.name).ToArray();
+
+        private static ArcaneAssets.Art[] ImportFolder(string folder, float pixelsPerUnit, Vector2 pivot) {
+            var result = new List<ArcaneAssets.Art>();
+            foreach (var file in Directory.GetFiles(folder, "*.png").Select(f => f.Replace('\\', '/')).OrderBy(f => f)) {
+                var importer = (TextureImporter)AssetImporter.GetAtPath(file);
+                SpriteSettings(importer, pixelsPerUnit, TextureImporterCompression.Uncompressed);
+                importer.spriteImportMode = SpriteImportMode.Single;
+                var settings = new TextureImporterSettings();
+                importer.ReadTextureSettings(settings);
+                settings.spriteAlignment = (int)SpriteAlignment.Custom;
+                settings.spritePivot = pivot;
+                importer.SetTextureSettings(settings);
+                importer.SaveAndReimport();
+                result.Add(new ArcaneAssets.Art { name = Path.GetFileNameWithoutExtension(file), sprite = AssetDatabase.LoadAssetAtPath<Sprite>(file) });
+            }
+            return result.ToArray();
         }
-        private static readonly Vector2[] MainPath={new Vector2(-15,-6),new Vector2(-11,-8),new Vector2(-7,-5),new Vector2(-4,-2),new Vector2(-1,0),new Vector2(4,1),new Vector2(8,2),new Vector2(11,4),new Vector2(14,7)};
-        private static readonly Vector2[] BrookPath={new Vector2(-4,0),new Vector2(-8,2),new Vector2(-11,4),new Vector2(-13,6)};
-        public static bool Walkable(Vector2 p){
-            if(p.x< -18||p.x>18||p.y< -11||p.y>11)return false;
-            if(Vector2.Distance(p,new Vector2(-13,-7))<2.5f||Vector2.Distance(p,new Vector2(-1,0))<3.6f||Vector2.Distance(p,new Vector2(-13,6))<2.8f||Vector2.Distance(p,new Vector2(14,8))<3.2f)return true;
-            return Corridor(p,MainPath,1.25f)||Corridor(p,BrookPath,1.25f);
+
+        private static void SpriteSettings(TextureImporter importer, float pixelsPerUnit, TextureImporterCompression compression) {
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spritePixelsPerUnit = pixelsPerUnit;
+            importer.alphaIsTransparency = true;
+            importer.mipmapEnabled = false;
+            importer.filterMode = FilterMode.Bilinear;
+            importer.wrapMode = TextureWrapMode.Clamp;
+            importer.maxTextureSize = 2048;
+            importer.textureCompression = compression;
         }
-        private static bool Corridor(Vector2 p,Vector2[] points,float width){for(int i=1;i<points.Length;i++){var d=points[i]-points[i-1];float t=Mathf.Clamp01(Vector2.Dot(p-points[i-1],d)/d.sqrMagnitude);if(Vector2.Distance(p,points[i-1]+d*t)<width)return true;}return false;}
+
+        // Reads the PNG header so the size is right even before the first import finishes.
+        private static int ImageHeight(string path) {
+            using (var stream = File.OpenRead(path)) {
+                var header = new byte[24];
+                stream.Read(header, 0, 24);
+                return (header[20] << 24) | (header[21] << 16) | (header[22] << 8) | header[23];
+            }
+        }
+
+        private static void WriteScene(ArcaneAssets assets) {
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var root = new GameObject("Arcane field session");
+            var session = root.AddComponent<ArcaneSession>();
+            session.Assets = assets;
+            var input = root.AddComponent<ArcaneInput>();
+            input.Session = session;
+            var hud = root.AddComponent<ArcaneHud>();
+            hud.Session = session;
+            hud.Controls = input;
+            new GameObject("Input bindings").AddComponent<InputManager>();
+            var events = new GameObject("UI events");
+            events.AddComponent<EventSystem>();
+            events.AddComponent<StandaloneInputModule>();
+            var cameraObject = new GameObject("Main Camera") { tag = "MainCamera" };
+            var camera = cameraObject.AddComponent<Camera>();
+            camera.orthographic = true;
+            camera.orthographicSize = ArcaneCamera.ViewHalfHeight;
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(.06f, .12f, .08f);
+            cameraObject.AddComponent<AudioListener>();
+            cameraObject.transform.position = new Vector3(-14, -8, -10);
+            cameraObject.AddComponent<ArcaneCamera>().Session = session;
+            EditorSceneManager.SaveScene(scene, ScenePath);
+            EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
+            PlayerSettings.productName = "Arcane Casters";
+            PlayerSettings.companyName = "Apptive Game Team";
+            PlayerSettings.defaultScreenWidth = 1280;
+            PlayerSettings.defaultScreenHeight = 720;
+            PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
+            PlayerSettings.resizableWindow = true;
+            PlayerSettings.runInBackground = true;
+            AssetDatabase.SaveAssets();
+        }
+
         [MenuItem("Arcane Casters/Build Windows")]
-        public static void BuildWindows(){
-            PlayerSettings.productName="Arcane Casters";
-            if(!File.Exists(ScenePath))throw new InvalidOperationException("Create the field scene first.");
-            var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{ScenePath},locationPathName="Build/ArcaneCastersRift/ArcaneCastersRift.exe",target=BuildTarget.StandaloneWindows64,options=BuildOptions.Development});
-            if(report.summary.result!=BuildResult.Succeeded)throw new Exception("Windows build failed: "+report.summary.result);
+        public static void BuildWindows() {
+            PlayerSettings.productName = "Arcane Casters";
+            if (!File.Exists(ScenePath)) throw new InvalidOperationException("Run Import Art and Rebuild First Field first.");
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
+                scenes = new[] { ScenePath },
+                locationPathName = "Build/ArcaneCastersRift/ArcaneCastersRift.exe",
+                target = BuildTarget.StandaloneWindows64,
+                options = BuildOptions.Development,
+            });
+            if (report.summary.result != BuildResult.Succeeded) throw new Exception("Windows build failed: " + report.summary.result);
             Debug.Log("ARCANE_WINDOWS_BUILD_OK");
         }
     }

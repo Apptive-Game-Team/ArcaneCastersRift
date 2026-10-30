@@ -25,7 +25,7 @@ namespace ArcaneCasters.DataSystem {
     [Serializable]
     public sealed class ArcaneSave {
         public int version = 1, level = 1, experience, research, phase;
-        public bool brook, rocks;
+        public bool brook, rocks, vine, briefed;
         public int[] ranks = { 1, 1, 0, 0, 0, 0, 1 };
         public int[] slots = { -1, 1, -1 };
         public string[] defeated = Array.Empty<string>();
