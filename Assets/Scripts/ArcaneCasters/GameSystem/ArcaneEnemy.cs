@@ -166,7 +166,8 @@ namespace ArcaneCasters.GameSystem {
             if (Time.time < stunUntil) { body.velocity = Vector2.zero; return; }
             var player = Session.Player;
             float playerDistance = Vector2.Distance(transform.position, player.transform.position);
-            if (playerDistance < (Boss ? 7.5f : 6.1f) && !player.Dead) Alerted = true;
+            // Notice Mira only with a clear line of sight: a forest wall between them hides her.
+            if (playerDistance < (Boss ? 7.5f : 6.1f) && !player.Dead && !Physics2D.Linecast(transform.position, player.transform.position, Session.Walls)) Alerted = true;
             if (Vector2.Distance(transform.position, home) > 9 || playerDistance > 11 || player.Dead) Alerted = false;
             if (!Alerted) {
                 bool away = Vector2.Distance(transform.position, home) > .25f;
