@@ -1,0 +1,9 @@
+Game prop sprite pair, square 1024x1024 canvas.
+The ENTIRE background is one perfectly flat solid color: pure magenta, RGB(255,0,255), hex #FF00FF. No gradient, no texture, no floor, no ground shadow, no vignette, no border lines, no grid lines. Do NOT use magenta, pink or purple anywhere on the subjects.
+SUBJECT — an ancient circular stone door set upright into a cave wall, like a huge round millstone carved with a spoked wheel symbol and concentric rings, about three times as tall as a person, standing on a short stone base.
+CAMERA: classic top-down action RPG three-quarter view. The camera looks down at about 40 degrees: we see the top of the head and shoulders and the front of the body, and the ground plane is foreshortened. Every figure stands upright with its feet touching an invisible ground line. Seen from the front.
+LAYOUT: the canvas is split into a LEFT half and a RIGHT half (invisible split, no line). The SAME door at the SAME size and position in both halves (door about 440 pixels tall), base at the same height, at least 40 pixels of empty background around each.
+Left: closed and dormant, grey weathered stone with faint glowing red cracks.
+Right: open: the stone wheel cracked apart and the center replaced by a swirling crimson-black portal with orange light; the outer ring still intact.
+ART STYLE: hand-painted 2D fantasy RPG game art: clean dark brown ink outline, cel shading with two or three flat value bands, light painterly texture. Not pixel art, not 3D render.
+No text, no letters, no numbers, no labels, no UI, no frame, no watermark, no cast shadow on the ground (the game draws its own shadow).

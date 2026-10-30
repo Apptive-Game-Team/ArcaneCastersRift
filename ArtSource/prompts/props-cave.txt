@@ -1,0 +1,9 @@
+Environment prop sheet for a top-down action RPG cave, square 1024x1024 canvas.
+The ENTIRE background is one perfectly flat solid color: pure magenta, RGB(255,0,255), hex #FF00FF. No gradient, no texture, no floor, no ground shadow, no vignette, no border lines, no grid lines. Do NOT use magenta, pink or purple anywhere on the subjects.
+CAMERA: classic top-down action RPG three-quarter view. The camera looks down at about 40 degrees: we see the top of the head and shoulders and the front of the body, and the ground plane is foreshortened. Every figure stands upright with its feet touching an invisible ground line.
+LAYOUT: an invisible 3x3 grid of cells (about 341x341 pixels each). One object per cell, centered, resting on the bottom of its cell area, at least 25 pixels of empty background around each. Objects never touch or cross cell borders.
+Row 1: (1) a cluster of dark stalagmites; (2) a dark rock pillar with a glowing red crack running down it; (3) a cluster of pale yellow crystals growing from dark rock.
+Row 2: (4) a jagged dark cave wall chunk; (5) a pile of fallen dark rubble; (6) a patch of glowing red cracks in the ground, seen from above, flat.
+Row 3: (7) a carved ancient stone stele with a worn spoked-wheel symbol; (8) a broken carved stone step; (9) a tall dark rock column.
+ART STYLE: hand-painted 2D fantasy RPG game art: clean dark brown ink outline, cel shading with two or three flat value bands, light painterly texture, cool dim light, dark slate and charcoal stone with faint pale yellow crystal light and red glowing cracks. Not pixel art, not 3D render.
+No text, no letters, no numbers, no labels, no UI, no frame, no watermark, no cast shadow on the ground (the game draws its own shadow).

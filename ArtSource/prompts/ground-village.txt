@@ -1,0 +1,9 @@
+Four seamless tileable ground textures for a top-down 2D game, square 1024x1024 canvas split into an invisible 2x2 grid of 512x512 cells, each cell completely filled edge to edge by its texture (no border, no gap between cells).
+CAMERA: straight orthographic top-down view of flat ground, no perspective, no objects taller than ankle height, no shadows of trees.
+Top-left: short hill meadow grass with small white and violet flowers and a few tiny pebbles, fresh green.
+Top-right: grey-tan gravel path with small flat stones, even density.
+Bottom-left: dark slate cave floor with fine cracks and grit, cool charcoal grey.
+Bottom-right: worn carved stone floor of an ancient chamber, large dark grey slabs with faint engraved lines.
+Each texture uniform across its cell, no focal point, no vignette, no lighting gradient, so it tiles without seams.
+ART STYLE: hand-painted 2D fantasy RPG game art, cel shading with light painterly texture, matching a painterly forest ground set. Not pixel art, not a photo.
+No text, no labels, no UI, no watermark.
