@@ -1,0 +1,82 @@
+{
+ "cell": [
+  212,
+  212
+ ],
+ "pivot": [
+  0.5,
+  0.0472
+ ],
+ "names": [
+  "idle",
+  "walk1",
+  "walk2",
+  "cast"
+ ],
+ "frames": {
+  "idle": {
+   "height": 192,
+   "width": 131,
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 1.0,
+   "height_ratio": 1.0,
+   "source_box": [
+    137,
+    43,
+    490,
+    561
+   ]
+  },
+  "walk1": {
+   "height": 196,
+   "width": 130,
+   "offset": [
+    0,
+    -2
+   ],
+   "overlap": 0.928,
+   "height_ratio": 1.021,
+   "source_box": [
+    757,
+    46,
+    1107,
+    576
+   ]
+  },
+  "walk2": {
+   "height": 193,
+   "width": 128,
+   "offset": [
+    0,
+    -2
+   ],
+   "overlap": 0.891,
+   "height_ratio": 1.005,
+   "source_box": [
+    133,
+    668,
+    478,
+    1190
+   ]
+  },
+  "cast": {
+   "height": 190,
+   "width": 163,
+   "offset": [
+    0,
+    2
+   ],
+   "overlap": 0.845,
+   "height_ratio": 0.99,
+   "source_box": [
+    739,
+    669,
+    1178,
+    1182
+   ]
+  }
+ }
+}

@@ -1,0 +1,10 @@
+Environment prop sheet for a top-down action RPG forest, square 1024x1024 canvas.
+The ENTIRE background is one perfectly flat solid color: pure magenta, RGB(255,0,255), hex #FF00FF. No gradient, no texture, no floor, no ground shadow, no vignette, no border lines, no grid lines. Do NOT use magenta, pink or purple anywhere on the subjects.
+CAMERA: classic top-down action RPG three-quarter view. The camera looks down at about 45 degrees: we see the top of the head and shoulders and the front of the body, and the ground plane is foreshortened. Every figure stands upright with both feet visible and touching an invisible ground line.
+LAYOUT: an invisible 2x2 grid of 512x512 cells. One object per cell, centered, standing on the bottom of the cell area (base about 40 pixels above the cell bottom), at least 30 pixels of empty background between each object and its cell borders. Objects never touch or cross cell borders.
+Top-left: a large broadleaf forest tree, round dense emerald canopy filling most of the cell, a thick short trunk with a little visible root flare at the bottom center.
+Top-right: a tall dark teal pine-like forest tree, narrower, trunk visible at the bottom center.
+Bottom-left: a round leafy bush with a few small white flowers, about one third of the cell height.
+Bottom-right: a cluster of three mossy grey boulders, about half the cell height.
+ART STYLE (must match exactly across the whole game): hand-painted 2D fantasy RPG game art. Clean dark brown ink outline of even weight around every shape. Cel shading with two or three flat value bands per material, plus a light painterly texture inside the shapes. Warm sunlight from the upper left, so lit faces point up-left and shadow sides face down-right. Natural, saturated forest palette. Shapes must stay readable when shrunk to 100 pixels tall. Not pixel art, not 3D render, not photo, not chibi.
+No text, no letters, no numbers, no labels, no UI, no frame, no watermark, no cast shadow on the ground (the game draws its own shadow).

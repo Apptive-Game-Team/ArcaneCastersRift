@@ -1,0 +1,48 @@
+{
+ "cell": [
+  194,
+  236
+ ],
+ "pivot": [
+  0.5,
+  0.0339
+ ],
+ "names": [
+  "idle",
+  "talk"
+ ],
+ "frames": {
+  "idle": {
+   "height": 220,
+   "width": 136,
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 1.0,
+   "height_ratio": 1.0,
+   "source_box": [
+    171,
+    119,
+    667,
+    920
+   ]
+  },
+  "talk": {
+   "height": 220,
+   "width": 158,
+   "offset": [
+    -4,
+    0
+   ],
+   "overlap": null,
+   "height_ratio": 1.0,
+   "source_box": [
+    865,
+    120,
+    1440,
+    920
+   ]
+  }
+ }
+}
