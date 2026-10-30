@@ -5,14 +5,14 @@ against repository configuration before running them.
 
 ## Overview
 
-- Product: **계몽 (GyeMong)** — 2D 탑다운 액션 RPG
+- Product: **Arcane Casters Rift** — GyeMong 구조를 기반으로 한 2D 마법 액션 RPG
 - Primary users: 플레이어 (데스크톱/웹 브라우저)
 - Core domain: 계절별 스테이지 진행, 보스 패턴 전투, 이벤트 연출
 - Runtime environment: **Unity 2022.3.34f1**, URP 14.0.11, 2D Feature 2.0.1
 
 ## Architecture
 
-- Entry point: `Assets/Scenes/TitleScene.unity` (빌드 세팅 0번). 총 13개 씬 등록.
+- Entry point: `Assets/Scenes/ArcaneCasters/RootBoundary.unity`. 기존 GyeMong 씬은 보존한다.
 - Main modules (`Assets/Scripts/GyeMong/`):
   - `GameSystem/` — 플레이어, 몹/보스 상태머신, 공격, 맵/포탈
   - `UISystem/` — 인게임 HUD, 옵션, 타이틀, 소셜(로그인/마이페이지)
@@ -25,7 +25,7 @@ against repository configuration before running them.
 - External systems: `Assets/Scripts/GyeMong/UISystem/Social/` 이 `UnityWebRequest`
   로 로그인/회원가입 서버와 통신.
 - Persistent data: `PlayerPrefs` (스테이지 진행도 등). 세이브 파일 포맷 없음.
-- Art/audio: `Assets/GyeMong_Art` **Git 서브모듈** (`Apptive-Game-Team/GyeMong_Art`).
+- Art/audio: `Assets/GyeMong_Art`는 GUID를 보존한 기존 아트이며 일반 파일로 직접 추적한다. 새 아트는 `Assets/ArcaneCasters/Art`에 추가한다.
 
 ## Commands
 
@@ -33,9 +33,9 @@ against repository configuration before running them.
 
 | Purpose | Command |
 |---|---|
-| Clone | `git clone --recurse-submodules https://github.com/Apptive-Game-Team/GyeMong.git` |
-| Sync submodule | `git submodule update --init --recursive` |
-| Run locally | Unity Hub → 2022.3.34f1 로 프로젝트 열기 → `TitleScene` 재생 |
+| Clone | `git clone https://github.com/Apptive-Game-Team/ArcaneCastersRift.git` |
+| Art | 별도 동기화 없이 이 저장소에서 직접 관리 |
+| Run locally | Unity Hub → 2022.3.34f1 → `Assets/Scenes/ArcaneCasters/RootBoundary.unity` 재생 |
 | Format | TODO (설정 없음) |
 | Lint | TODO (설정 없음) |
 | Type-check | Unity 에디터 컴파일 (별도 명령 없음) |
@@ -65,5 +65,5 @@ CI는 `game-ci/unity-builder@v4` 를 쓰고 `UNITY_LICENSE` / `UNITY_EMAIL` /
   - `Assets/Scripts/Util/ChangeListener/` — 모든 HUD가 의존. 변경 시 전 UI 영향.
   - `Assets/Scripts/GyeMong/GameSystem/Creature/Player/PlayerCharacter.cs` — 전투 밸런스 직결
   - `.github/workflows/` — 릴리스·배포 파이프라인
-  - `Assets/GyeMong_Art` 서브모듈 핀 — 바꾸면 전원 재동기화 필요
-- Changes requiring explicit review: 서브모듈 핀 변경, CI 워크플로, 히스토리 재작성
+  - `Assets/GyeMong_Art` 기존 GUID — 바꾸면 기존 씬 참조 손상
+- Changes requiring explicit review: 기존 아트 대량 삭제, CI 워크플로, 히스토리 재작성

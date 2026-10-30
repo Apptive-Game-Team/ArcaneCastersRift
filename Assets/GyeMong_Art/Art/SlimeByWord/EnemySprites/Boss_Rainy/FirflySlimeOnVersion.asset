@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 796933e8250b4aceb997100b0402156f, type: 3}
+  m_Name: FirflySlimeOnVersion
+  m_EditorClassIdentifier: 
+  idleSprites:
+  - {fileID: 21300000, guid: 2ec0ef27f92a74bce96756cc956a0b6c, type: 3}
+  - {fileID: 21300000, guid: b2a2d2516aa9540eeb45fa0ccd480b1e, type: 3}
+  rangedAttackSprites:
+  - {fileID: 21300000, guid: ae3c87099626f4f9a98db9ab75406535, type: 3}
+  - {fileID: 21300000, guid: 32aea8c3075124d01b1be25083e4a179, type: 3}
+  - {fileID: 21300000, guid: ae3c87099626f4f9a98db9ab75406535, type: 3}
+  meleeAttackSprites:
+  - {fileID: 21300000, guid: 5fe6689394e9d4abf8e494e6ae477856, type: 3}
+  - {fileID: 21300000, guid: 1e8f25d2cdfd441479611e986e8c2471, type: 3}
+  - {fileID: 21300000, guid: c1f34cb9506d44772888ef8ad3454b9c, type: 3}
+  - {fileID: 21300000, guid: 1e8f25d2cdfd441479611e986e8c2471, type: 3}
+  dieSprites:
+  - {fileID: 21300000, guid: 2b01e37920722496e8d397205bc19879, type: 3}
+  - {fileID: 21300000, guid: 1874fbe80096e4b5882217c1e82b50c5, type: 3}

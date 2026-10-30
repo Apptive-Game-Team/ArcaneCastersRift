@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 796933e8250b4aceb997100b0402156f, type: 3}
+  m_Name: FlowerSlimeSprites
+  m_EditorClassIdentifier: 
+  idleSprites:
+  - {fileID: 21300000, guid: c2570c654a6bc4c12adcee57f70d7e17, type: 3}
+  - {fileID: 21300000, guid: 0d16647c5c4a044ceb0cc4df09e4bbfe, type: 3}
+  rangedAttackSprites:
+  - {fileID: 21300000, guid: 8df9a0388261240e0a13208d358abe6e, type: 3}
+  - {fileID: 21300000, guid: e3a4d4cd1b0e249108ae061cf391a5d8, type: 3}
+  - {fileID: 21300000, guid: 8df9a0388261240e0a13208d358abe6e, type: 3}
+  meleeAttackSprites:
+  - {fileID: 21300000, guid: c2570c654a6bc4c12adcee57f70d7e17, type: 3}
+  - {fileID: 21300000, guid: 0d16647c5c4a044ceb0cc4df09e4bbfe, type: 3}
+  - {fileID: 21300000, guid: c2570c654a6bc4c12adcee57f70d7e17, type: 3}
+  - {fileID: 21300000, guid: 45c26f2341a2e4696a4a1766305f8e03, type: 3}
+  dashAttackSprites:
+  - {fileID: 21300000, guid: af77f460e390b4164b34a9c770db62fd, type: 3}
+  - {fileID: 21300000, guid: af77f460e390b4164b34a9c770db62fd, type: 3}
+  - {fileID: 21300000, guid: 0d16647c5c4a044ceb0cc4df09e4bbfe, type: 3}
+  dieSprites:
+  - {fileID: 21300000, guid: a382d67b8da9246d1a8626298fa9fc64, type: 3}
+  - {fileID: 21300000, guid: aa93e8d2f16984e88939b94aa7d2494d, type: 3}
