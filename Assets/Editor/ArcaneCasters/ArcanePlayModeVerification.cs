@@ -40,7 +40,7 @@ namespace ArcaneCasters.Editor {
             routines.Clear();
             routines.Push(Verify());
             passed = 0;
-            deadline = EditorApplication.timeSinceStartup + 120;
+            deadline = EditorApplication.timeSinceStartup + 200;
             EditorApplication.update -= Tick;
             EditorApplication.update += Tick;
         }
@@ -256,7 +256,71 @@ namespace ArcaneCasters.Editor {
             Check(p.Dead, "player enters defeated state");
             yield return 2.8f;
             Check(!p.Dead && Mathf.Approximately(p.CurrentHp, p.MaxHp) && Vector2.Distance(p.transform.position, s.StartPoint) < .1f, "defeat returns to camp with progress");
+            yield return StoneVillage();
             Debug.Log("ARCANE_PLAYMODE_OK: " + passed + " checks passed through game commands");
+        }
+
+        private static int Mismatches(ArcaneSession s) {
+            var field = s.Field;
+            int mismatches = 0;
+            for (int row = 0; row < field.Height; row++)
+                for (int col = 0; col < field.Width; col++) {
+                    Vector2 c = field.CellCenter(col, row);
+                    if (!field.Walkable(c) && !Physics2D.OverlapPoint(c, s.Walls)) mismatches++;
+                }
+            return mismatches;
+        }
+
+        private static IEnumerator Interact(ArcaneSession s, Vector2 at) {
+            Place(s.Player, at);
+            yield return .15f;
+            s.Interact();
+            yield return .1f;
+            yield return CloseDialogues(s);
+        }
+
+        // Chapter 2: Fin at the stone golem village, from arrival to the voice at the open door.
+        private static IEnumerator StoneVillage() {
+            SceneManager.LoadScene("StoneVillage");
+            yield return 1.2f;
+            var s = UnityEngine.Object.FindObjectOfType<ArcaneSession>();
+            s.GetComponent<ArcaneInput>().enabled = false;
+            var p = s.Player;
+            var field = s.Field;
+            Check(s.ChapterId == StoneVillageChapter.ChapterId && s.Chapter.PlayerName == ArcaneSession.Fin, "chapter 2 loads with Fin");
+            for (float wait = 0; wait < 5 && s.UiMode != "dialogue"; wait += .1f) yield return .1f;
+            Check(s.UiMode == "dialogue", "chapter 2 opens with Fin's arrival");
+            yield return CloseDialogues(s);
+            Check(Mismatches(s) == 0, "chapter 2: every blocked cell has a collider");
+            Check(!Reachable(field, s.StartPoint, field.Marker('K')), "chapter 2: the big golem holds the gate");
+            yield return Interact(s, field.Marker('B') + Vector2.down * 2.2f);
+            Check(s.Progress.phase == 1 && field.SealOpen && Reachable(field, s.StartPoint, field.Marker('K')), "greeting the big golem opens the village");
+            foreach (var stone in field.Markers('o')) yield return Interact(s, stone + Vector2.down * 1.0f);
+            Check(s.Progress.phase == 2, "rolling three stones with the mini-rocks names Mok");
+            Check(Reachable(field, s.StartPoint, field.Marker('Q')) && Reachable(field, s.StartPoint, field.Marker('S')) && Reachable(field, s.StartPoint, field.Marker('D')), "quarry, spring and the cave door are reachable on foot");
+            yield return Interact(s, field.Marker('Q') + Vector2.down * 1.6f);
+            yield return Interact(s, field.Marker('S') + Vector2.left * 1.6f);
+            yield return CloseDialogues(s);
+            Check(s.Progress.phase == 3 && p.Book.Rank(ArcaneSpell.Ward) > 0 && p.Book.Rank(ArcaneSpell.Frost) > 0, "both observations send Mok running to the cave");
+            Check(s.Enemies.Count(e => e && !e.Dead) == 5, "embers leak out on the way to the cave (5)");
+            foreach (var e in s.Enemies.ToArray()) if (e) e.OnAttacked(9999);
+            Place(p, new Vector2(-6f, 11f));
+            yield return .3f;
+            Check(s.Progress.phase == 4 && s.Darkness > 0, "entering the cave darkens the view");
+            yield return Interact(s, field.Marker('D') + Vector2.down * 2.4f);
+            Check(s.Progress.phase == 5, "reaching Mok at the door opens it");
+            for (float wait = 0; wait < 30 && s.Progress.phase < 6; wait += .3f) {
+                foreach (var e in s.Enemies.ToArray()) if (e && !e.Dead) e.OnAttacked(9999);
+                yield return .3f;
+            }
+            Check(s.Progress.phase == 6 && s.Progress.step == 3, "three fixed waves end the chapter");
+            yield return 1.6f;
+            Check(s.UiMode == "ending", "the voice and the ending card appear");
+            s.Save();
+            SceneManager.LoadScene("StoneVillage");
+            yield return 2.0f;
+            s = UnityEngine.Object.FindObjectOfType<ArcaneSession>();
+            Check(s.Progress.phase == 6 && s.UiMode == "ending", "chapter 2 completion persists on reentry");
         }
 
         private static bool Reachable(ArcaneField field, Vector2 from, Vector2 to) {
@@ -282,6 +346,7 @@ namespace ArcaneCasters.Editor {
 
         private static void Finish(int code) {
             PlayerPrefs.DeleteKey(SessionState.GetString(Key, ""));
+            PlayerPrefs.DeleteKey(SessionState.GetString(Key, "") + "." + StoneVillageChapter.ChapterId);
             PlayerPrefs.Save();
             SessionState.SetBool(Active, false);
             EditorApplication.update -= Tick;

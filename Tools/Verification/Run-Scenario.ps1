@@ -5,12 +5,15 @@ param(
     [Parameter(Mandatory)][string]$OutDir,
     [string[]]$ExtraArgs = @(),
     # Isolates the run in its own save slot (development builds only), so the player's save is untouched.
-    [string]$SaveKey = ''
+    [string]$SaveKey = '',
+    # Opens another chapter at launch (development builds), for example stone-village.
+    [string]$Chapter = ''
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $exitCode = 0
 if ($SaveKey) { $ExtraArgs = @($ExtraArgs) + @('--arcane-save-key', $SaveKey) }
+if ($Chapter) { $ExtraArgs = @($ExtraArgs) + @('--arcane-chapter', $Chapter) }
 try {
     Import-Module (Join-Path $PSScriptRoot 'ArcaneInput.psm1') -Force -DisableNameChecking
     $scenarioPath = (Resolve-Path -LiteralPath $Scenario).Path

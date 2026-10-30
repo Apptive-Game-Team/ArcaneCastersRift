@@ -1,7 +1,8 @@
 # Shared helpers for scenarios. Dot-sourced after ArcaneInput.psm1 is imported.
 # Observation comes from the game's telemetry file; every action is an OS input event.
 
-$script:Route = Get-Content (Join-Path $PSScriptRoot 'route.json') -Raw | ConvertFrom-Json
+if (-not (Test-Path variable:RouteFile)) { $RouteFile = 'route.json' }
+$script:Route = Get-Content (Join-Path $PSScriptRoot $RouteFile) -Raw | ConvertFrom-Json
 $script:HeldMove = @{}
 $script:LeftHeld = $false
 
