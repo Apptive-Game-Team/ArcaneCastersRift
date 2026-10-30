@@ -1,0 +1,1095 @@
+fileFormatVersion: 2
+guid: 67c749b30c466480bb888fb75d988ad6
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 386
+        width: 228
+        height: 231
+      alignment: 9
+      pivot: {x: 0.5, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83e3c7df3c9abc24c9d429fcc7ba3ef7
+      internalID: 1382226331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_1
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 561
+        width: 93
+        height: 86
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 901c25475c890754eb7363c407aaa03c
+      internalID: 259791878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_2
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 517
+        width: 147
+        height: 133
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 545aa6adca9448d46b81294d0bc6f04c
+      internalID: -686772029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_3
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 580
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ae60c66cb5daf94ea75bc92a9269ce1
+      internalID: 1615546292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_4
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 580
+        width: 34
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b5035eba97289945937355f562d5300
+      internalID: 42517032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_5
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 579
+        width: 29
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c2cf043c02155d4593bfdec73004abc
+      internalID: -40746888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_6
+      rect:
+        serializedVersion: 2
+        x: 470
+        y: 578
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d41a79ea831ddb2429d0ea8ca968575e
+      internalID: -31581991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_7
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 521
+        width: 113
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d2edf777fa395343b7e946bb627c11a
+      internalID: 1956884024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_8
+      rect:
+        serializedVersion: 2
+        x: 797
+        y: 589
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 954d894a6411e8d44879896f468199a7
+      internalID: 556104419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_9
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 586
+        width: 58
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fff230cc70def8d4db679cb830c88a6a
+      internalID: 1762380294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_10
+      rect:
+        serializedVersion: 2
+        x: 886
+        y: 485
+        width: 138
+        height: 189
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: caf352a24eadfb64298abf2e5e440866
+      internalID: 580427015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_11
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 523
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4577ea113073864a9780a88934ab5bc
+      internalID: 219735913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_12
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 527
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16eed0440512e0846ad0dddd125f56e7
+      internalID: -1580460398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_13
+      rect:
+        serializedVersion: 2
+        x: 624
+        y: 529
+        width: 11
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cd4e376899d4e8449479e2c56c21856
+      internalID: -603973479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_14
+      rect:
+        serializedVersion: 2
+        x: 718
+        y: 492
+        width: 113
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e5ceb6d77a7e2247840ed66854692ae
+      internalID: 1872812307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_15
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 514
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92e6e34fb38eb724f8fae60eb792498d
+      internalID: 2130335358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_16
+      rect:
+        serializedVersion: 2
+        x: 337
+        y: 515
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce1c93d2c3f8ac6458e277734ef61cdb
+      internalID: 464789733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_17
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 515
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 221564107274390418f636e5f49fe90a
+      internalID: -1896112169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_18
+      rect:
+        serializedVersion: 2
+        x: 831
+        y: 495
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a578d31d161fd646b765f815dfa0cda
+      internalID: -208885774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_19
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 396
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7343c3214424f834a89bc79f43509860
+      internalID: 2113445761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_20
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 393
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bc0c38220fce8e4692de9f97793dcad
+      internalID: -1983767485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_21
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 300
+        width: 100
+        height: 133
+      alignment: 9
+      pivot: {x: 0.5, y: 0.14}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d356140813e08e240a7e69410992a48a
+      internalID: 411436440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_22
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 385
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3cff9820cfb5b4468ff8d0221edc21b
+      internalID: -1703826290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_23
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 384
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e1c8e5eb060d834bbd875ee0b483d60
+      internalID: 901874932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 292
+        width: 12
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bda4908466d25cf49a95b08c4d475884
+      internalID: -2137131832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_25
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 273
+        width: 71
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.23}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 527ed9d1bc170424c8e75ddfb957bacb
+      internalID: 1924919501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_26
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 265
+        width: 48
+        height: 46
+      alignment: 9
+      pivot: {x: 0.5, y: 0.29}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd27758efe286dc42b707b52e2d5d0b6
+      internalID: -1339669708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_27
+      rect:
+        serializedVersion: 2
+        x: 841
+        y: 283
+        width: 56
+        height: 63
+      alignment: 9
+      pivot: {x: 0.5, y: 0.23}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 661ebf4f43035454ca90948efc1dc013
+      internalID: 743575081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_28
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 302
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69607f7916092944c8ce7ef0fff63200
+      internalID: 1538749324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_29
+      rect:
+        serializedVersion: 2
+        x: 898
+        y: 284
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f9515cfdd16bdb40bb677b4c9894552
+      internalID: 91696268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_30
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 275
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 207ff4d71fae82840963b4ccba093136
+      internalID: 702077400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_31
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 274
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df853b6829d1a774f8d0f05dc63150df
+      internalID: -1900045780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_32
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 268
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 879d31098528b6f449dccd3f1d248ebd
+      internalID: 191596309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_33
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 241
+        width: 38
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30d49b00ea2a0df459154816af930654
+      internalID: -1702209510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_34
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 76
+        width: 116
+        height: 134
+      alignment: 9
+      pivot: {x: 0.5, y: 0.17}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 010b7762bca68204597d5afd3a2e15f4
+      internalID: -1636944799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_35
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 121
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1ec65e98eaea0548a86a3d600569df7
+      internalID: 1243593259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_36
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 117
+        width: 93
+        height: 83
+      alignment: 9
+      pivot: {x: 0.5, y: 0.23}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6cdf2a9e85e8ad24a990844baf5b879e
+      internalID: -1257146354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_37
+      rect:
+        serializedVersion: 2
+        x: 475
+        y: 0
+        width: 287
+        height: 264
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86cbd453eef3f5243885e9fb2ea3e88e
+      internalID: 1879129195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_38
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 0
+        width: 232
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef70414aeb8ca91418e3e825d69c3088
+      internalID: 1793490248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_39
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 78
+        width: 21
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53d10e391c801c64585da1fcc476118a
+      internalID: -316593667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_40
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 36
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04c0a40852b95e847837d4fbb694998b
+      internalID: 1625745541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_41
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 22
+        width: 47
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b1fcd3f298ed364ab4c8cb7d398dc05
+      internalID: 1862196866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_42
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 0
+        width: 146
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77dac5b5aa7962d4485cc84710b2104b
+      internalID: 891953428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: summer_boss3-2_l2_43
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 0
+        width: 64
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 733a378acbb706f42a5ed7a127d6f856
+      internalID: 1589490791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      summer_boss3-2_l2_0: 1382226331
+      summer_boss3-2_l2_1: 259791878
+      summer_boss3-2_l2_10: 580427015
+      summer_boss3-2_l2_11: 219735913
+      summer_boss3-2_l2_12: -1580460398
+      summer_boss3-2_l2_13: -603973479
+      summer_boss3-2_l2_14: 1872812307
+      summer_boss3-2_l2_15: 2130335358
+      summer_boss3-2_l2_16: 464789733
+      summer_boss3-2_l2_17: -1896112169
+      summer_boss3-2_l2_18: -208885774
+      summer_boss3-2_l2_19: 2113445761
+      summer_boss3-2_l2_2: -686772029
+      summer_boss3-2_l2_20: -1983767485
+      summer_boss3-2_l2_21: 411436440
+      summer_boss3-2_l2_22: -1703826290
+      summer_boss3-2_l2_23: 901874932
+      summer_boss3-2_l2_24: -2137131832
+      summer_boss3-2_l2_25: 1924919501
+      summer_boss3-2_l2_26: -1339669708
+      summer_boss3-2_l2_27: 743575081
+      summer_boss3-2_l2_28: 1538749324
+      summer_boss3-2_l2_29: 91696268
+      summer_boss3-2_l2_3: 1615546292
+      summer_boss3-2_l2_30: 702077400
+      summer_boss3-2_l2_31: -1900045780
+      summer_boss3-2_l2_32: 191596309
+      summer_boss3-2_l2_33: -1702209510
+      summer_boss3-2_l2_34: -1636944799
+      summer_boss3-2_l2_35: 1243593259
+      summer_boss3-2_l2_36: -1257146354
+      summer_boss3-2_l2_37: 1879129195
+      summer_boss3-2_l2_38: 1793490248
+      summer_boss3-2_l2_39: -316593667
+      summer_boss3-2_l2_4: 42517032
+      summer_boss3-2_l2_40: 1625745541
+      summer_boss3-2_l2_41: 1862196866
+      summer_boss3-2_l2_42: 891953428
+      summer_boss3-2_l2_43: 1589490791
+      summer_boss3-2_l2_5: -40746888
+      summer_boss3-2_l2_6: -31581991
+      summer_boss3-2_l2_7: 1956884024
+      summer_boss3-2_l2_8: 556104419
+      summer_boss3-2_l2_9: 1762380294
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

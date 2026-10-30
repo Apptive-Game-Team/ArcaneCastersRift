@@ -1,0 +1,214 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62e42e2f15d32c14086b44f804b74d89, type: 3}
+  m_Name: FieldAssets
+  m_EditorClassIdentifier: 
+  frameSets:
+  - name: fin-down
+    frames:
+    - {fileID: 1203926356689778522, guid: 5a1dc0e85e7b76a498c41a63435bd9c9, type: 3}
+    - {fileID: -4308460226465673899, guid: 5a1dc0e85e7b76a498c41a63435bd9c9, type: 3}
+    - {fileID: 8175230495999384944, guid: 5a1dc0e85e7b76a498c41a63435bd9c9, type: 3}
+    - {fileID: 6906762127993726159, guid: 5a1dc0e85e7b76a498c41a63435bd9c9, type: 3}
+  - name: fin-side
+    frames:
+    - {fileID: 475199166667958193, guid: 7e7f1ec1fe1039e46ac76341a38e1f14, type: 3}
+    - {fileID: -2525208894612151581, guid: 7e7f1ec1fe1039e46ac76341a38e1f14, type: 3}
+    - {fileID: 9031496099658336536, guid: 7e7f1ec1fe1039e46ac76341a38e1f14, type: 3}
+    - {fileID: 6903325627523056530, guid: 7e7f1ec1fe1039e46ac76341a38e1f14, type: 3}
+  - name: fin-up
+    frames:
+    - {fileID: -9047046966871632226, guid: 09e5f6be21b0a784b9fa68c81e552719, type: 3}
+    - {fileID: -8977433481704642941, guid: 09e5f6be21b0a784b9fa68c81e552719, type: 3}
+    - {fileID: 8753408859679790841, guid: 09e5f6be21b0a784b9fa68c81e552719, type: 3}
+    - {fileID: 175157114527043706, guid: 09e5f6be21b0a784b9fa68c81e552719, type: 3}
+  - name: mira-down
+    frames:
+    - {fileID: -3066134901859567313, guid: f6223229e20c6864a9abf76f6d044083, type: 3}
+    - {fileID: -3679670914491592574, guid: f6223229e20c6864a9abf76f6d044083, type: 3}
+    - {fileID: -1952065254266616263, guid: f6223229e20c6864a9abf76f6d044083, type: 3}
+    - {fileID: 3557653066432347516, guid: f6223229e20c6864a9abf76f6d044083, type: 3}
+  - name: mira-side
+    frames:
+    - {fileID: -7550513553508598445, guid: 729d3ad08c7900c4aacb17f49e1f63da, type: 3}
+    - {fileID: 8534779731617017502, guid: 729d3ad08c7900c4aacb17f49e1f63da, type: 3}
+    - {fileID: 5874443860696640877, guid: 729d3ad08c7900c4aacb17f49e1f63da, type: 3}
+    - {fileID: 4752024089646670558, guid: 729d3ad08c7900c4aacb17f49e1f63da, type: 3}
+  - name: mira-up
+    frames:
+    - {fileID: 840455218060619370, guid: 08d8d184197a9514e850b03f61517975, type: 3}
+    - {fileID: 642760130524173928, guid: 08d8d184197a9514e850b03f61517975, type: 3}
+    - {fileID: -9045429629904533173, guid: 08d8d184197a9514e850b03f61517975, type: 3}
+    - {fileID: 947029707273049385, guid: 08d8d184197a9514e850b03f61517975, type: 3}
+  - name: orin
+    frames:
+    - {fileID: 7763453875109537605, guid: e44807a02f597424e8685fa621961a3b, type: 3}
+    - {fileID: -7094375914563662358, guid: e44807a02f597424e8685fa621961a3b, type: 3}
+  - name: ally-golem
+    frames:
+    - {fileID: 534733719371062081, guid: abdccd0841484ab43b5f7c04b3aa5f8c, type: 3}
+    - {fileID: 5388584758910144928, guid: abdccd0841484ab43b5f7c04b3aa5f8c, type: 3}
+  - name: enemy-brute
+    frames:
+    - {fileID: 6719803204010992295, guid: 10a518842de0a964c9c0bc2ade483b09, type: 3}
+    - {fileID: -5468664014626005098, guid: 10a518842de0a964c9c0bc2ade483b09, type: 3}
+  - name: enemy-charger
+    frames:
+    - {fileID: -4229662962364601933, guid: 8b0c38b0a45a71745914d963c346c4aa, type: 3}
+    - {fileID: -2116197414937926794, guid: 8b0c38b0a45a71745914d963c346c4aa, type: 3}
+  - name: enemy-imp
+    frames:
+    - {fileID: -7691476549933845514, guid: 6a8d0c348ac32694babb50bf481dd8a1, type: 3}
+    - {fileID: -8028340394842724403, guid: 6a8d0c348ac32694babb50bf481dd8a1, type: 3}
+  - name: enemy-spitter
+    frames:
+    - {fileID: 4907803756595902960, guid: 26dc202e33f9c3249baa894232ee37fa, type: 3}
+    - {fileID: 2557709705475259114, guid: 26dc202e33f9c3249baa894232ee37fa, type: 3}
+  - name: enemy-warden
+    frames:
+    - {fileID: 8459956914468401473, guid: f7751c630270d43448a08e257a11501d, type: 3}
+    - {fileID: -331565206868136161, guid: f7751c630270d43448a08e257a11501d, type: 3}
+  - name: enemy-wisp
+    frames:
+    - {fileID: -2134395253052702549, guid: 09592c02754c3d74b887264c39636aa0, type: 3}
+    - {fileID: 773659372997615235, guid: 09592c02754c3d74b887264c39636aa0, type: 3}
+  - name: mok
+    frames:
+    - {fileID: 4863114866236772728, guid: 37a28b504d64a174ca07aefb2920bebb, type: 3}
+    - {fileID: 2612410062646701008, guid: 37a28b504d64a174ca07aefb2920bebb, type: 3}
+  - name: portal
+    frames:
+    - {fileID: -7790042971108220301, guid: 1afda81e7f42bc94ea7f8d3076389de5, type: 3}
+    - {fileID: -5977899381375562462, guid: 1afda81e7f42bc94ea7f8d3076389de5, type: 3}
+  props:
+  - name: tree-broad
+    sprite: {fileID: 21300000, guid: b026642bd8ce4cb419151572896ea9f8, type: 3}
+  - name: tree-pine
+    sprite: {fileID: 21300000, guid: e8c42f0a0b469a849ad8d1b6e3fb7695, type: 3}
+  - name: bush
+    sprite: {fileID: 21300000, guid: 1ee91c9eec5680c4ba932d544f450763, type: 3}
+  - name: boulders
+    sprite: {fileID: 21300000, guid: bf69426e3768fc24fb752ca8675a5716, type: 3}
+  - name: tent
+    sprite: {fileID: 21300000, guid: 9c6f1d7c4ab390e47b51e438aa9fd4e1, type: 3}
+  - name: campfire
+    sprite: {fileID: 21300000, guid: b2f6f21281ad94c43b001574071bc7e8, type: 3}
+  - name: bench
+    sprite: {fileID: 21300000, guid: 540282f51b8c8a540b3770369bfdbd39, type: 3}
+  - name: world-root
+    sprite: {fileID: 21300000, guid: 7f8ba716a6614e4418bed143eeb9f526, type: 3}
+  - name: crystals
+    sprite: {fileID: 21300000, guid: 7cbf054d98c6ca445a2bfd73c841f4da, type: 3}
+  - name: signpost
+    sprite: {fileID: 21300000, guid: 58e285b34a501974e8a4cb0388c127b8, type: 3}
+  - name: ruin-arch
+    sprite: {fileID: 21300000, guid: 558f693f5a8ecad41be353175113f6d5, type: 3}
+  - name: ruin-pillar
+    sprite: {fileID: 21300000, guid: dccb14366b7f52146bddae6b8b2f2c2e, type: 3}
+  - name: rune-stone
+    sprite: {fileID: 21300000, guid: 8e0bb5b6f5098ec4fa699e350f358a33, type: 3}
+  - name: stone-hut
+    sprite: {fileID: 21300000, guid: d1a49977552c72d45adaacf31cde16ad, type: 3}
+  - name: cairn
+    sprite: {fileID: 21300000, guid: bb633322b9a79f34ebb007ce99dbe537, type: 3}
+  - name: play-ring
+    sprite: {fileID: 21300000, guid: 40612491922b004409b04f98e4a3fceb, type: 3}
+  - name: quarry-blocks
+    sprite: {fileID: 21300000, guid: a5d0f3b941dce3e4db9c049f21581129, type: 3}
+  - name: tool-rack
+    sprite: {fileID: 21300000, guid: 62a40814fc593ea4b8667d113cdfb50c, type: 3}
+  - name: spring-pool
+    sprite: {fileID: 21300000, guid: 73017601d834f314ab93b5d657936017, type: 3}
+  - name: rock-outcrop
+    sprite: {fileID: 21300000, guid: 088b0ab84b82cbf459f1d731cd2b2aef, type: 3}
+  - name: boulder-ridge
+    sprite: {fileID: 21300000, guid: 69bb5809a570e6c46b34b5599b590af5, type: 3}
+  - name: cliff-cave
+    sprite: {fileID: 21300000, guid: 933cdde9cbbf4c5478fd15af2a70c901, type: 3}
+  - name: stalagmites
+    sprite: {fileID: 21300000, guid: 4bf4cb4e3d5eaf74a95c6673e06eab3b, type: 3}
+  - name: red-pillar
+    sprite: {fileID: 21300000, guid: 725975ab4bbf4a446b5cf24d08c62824, type: 3}
+  - name: cave-crystals
+    sprite: {fileID: 21300000, guid: 1c47d4fd5b57ad04989e6c340456aa04, type: 3}
+  - name: cave-wall
+    sprite: {fileID: 21300000, guid: f90243598e0016548bcf50cee3f48090, type: 3}
+  - name: rubble
+    sprite: {fileID: 21300000, guid: f3f90e4f34dc13a43b04bf9937f980b9, type: 3}
+  - name: red-cracks
+    sprite: {fileID: 21300000, guid: 321c3601e35d3fa4b80de04cf23be620, type: 3}
+  - name: stele
+    sprite: {fileID: 21300000, guid: e7df39627b6dbda46a7833fa84c726ed, type: 3}
+  - name: steps
+    sprite: {fileID: 21300000, guid: 463057d2b17d1d149bcd6dffbeb9f0bd, type: 3}
+  - name: rock-column
+    sprite: {fileID: 21300000, guid: 2d2c1d91f255acf42a23604522e949c3, type: 3}
+  icons:
+  - name: bolt
+    sprite: {fileID: 21300000, guid: 7cb5fc04a114d11488c7f97619d36c05, type: 3}
+  - name: dash
+    sprite: {fileID: 21300000, guid: 69b658d4726e05943a129e8eabc45556, type: 3}
+  - name: frost
+    sprite: {fileID: 21300000, guid: 3cca72a9339ade34598fc352a57388ce, type: 3}
+  - name: journal
+    sprite: {fileID: 21300000, guid: aebf5165b7261e04b88364c3f2b7165d, type: 3}
+  - name: lightning
+    sprite: {fileID: 21300000, guid: e33973ee4bea5b64ab909052a1ae1af2, type: 3}
+  - name: potion
+    sprite: {fileID: 21300000, guid: 207398fca7db78b44ae25a47947bbcd2, type: 3}
+  - name: roots
+    sprite: {fileID: 21300000, guid: 2bc2fa862968dc34c875b407d192a9df, type: 3}
+  - name: summon
+    sprite: {fileID: 21300000, guid: eafc684aca9e68d43bdfce46c3139ea1, type: 3}
+  - name: ward
+    sprite: {fileID: 21300000, guid: 702891ff500e98e4eb2eb76fb24014e9, type: 3}
+  effects:
+  - name: card
+    sprite: {fileID: 21300000, guid: c091c74afe014ad429052ae2f9db9cc3, type: 3}
+  - name: dust
+    sprite: {fileID: 21300000, guid: e6c71ccce5c95314a9284e82a888f6c5, type: 3}
+  - name: ember
+    sprite: {fileID: 21300000, guid: 841be8994de21244f9694e86b0c9ac81, type: 3}
+  - name: ice
+    sprite: {fileID: 21300000, guid: df4da5dc315612043a5ff20befd18ee2, type: 3}
+  - name: spark
+    sprite: {fileID: 21300000, guid: 67f5c991b3367a248a0eecbb5df8376e, type: 3}
+  - name: stones
+    sprite: {fileID: 21300000, guid: 9c61ef3b66a0d314fb321059c1755625, type: 3}
+  - name: strike
+    sprite: {fileID: 21300000, guid: 9316b65d253773e4a96556694abf95b5, type: 3}
+  - name: thorns
+    sprite: {fileID: 21300000, guid: 80da9464fb592504b88b69f7274fa965, type: 3}
+  portraits:
+  - name: fin
+    sprite: {fileID: 21300000, guid: 4e4e5cfedcb370d40b4a7236b1c6be13, type: 3}
+  - name: mira
+    sprite: {fileID: 21300000, guid: b9513ad3fe11d5440a75eb494bf3add3, type: 3}
+  - name: orin
+    sprite: {fileID: 21300000, guid: 733e4f503fbdc034ab135089c03c25c5, type: 3}
+  grass: {fileID: 2800000, guid: 16de42ec5742f28448f7546a47b6050b, type: 3}
+  dirt: {fileID: 2800000, guid: 9e47d88d190a33646ac8e69c37df9ded, type: 3}
+  water: {fileID: 2800000, guid: b31a56e3c5a083a43bf6209023438dd6, type: 3}
+  stone: {fileID: 2800000, guid: fce57c72c31702e4b80dd0ec1a12af45, type: 3}
+  spells: {fileID: 4900000, guid: e54c3020e60ada04fac0584b5742e3d2, type: 3}
+  layout: {fileID: 4900000, guid: 51e14918dc18cec458cd7b1239de4868, type: 3}
+  chapters:
+  - id: root-boundary
+    layout: {fileID: 4900000, guid: 51e14918dc18cec458cd7b1239de4868, type: 3}
+    groundMaterial: {fileID: 2100000, guid: 8adef5309bf6a6141971d257aecebbde, type: 2}
+  - id: stone-village
+    layout: {fileID: 4900000, guid: e4ddef3fec050544080df74abe356813, type: 3}
+    groundMaterial: {fileID: 2100000, guid: cc4f30db3b83f984c81b34a3bbfd1622, type: 2}
+  appIcon: {fileID: 0}
+  font: {fileID: 12800000, guid: 1abc091920043c849a3cedfb793fc8eb, type: 3}
+  material: {fileID: 2100000, guid: 76d56ba025e5f58488339f40715b1e65, type: 2}
+  groundMaterial: {fileID: 2100000, guid: 8adef5309bf6a6141971d257aecebbde, type: 2}

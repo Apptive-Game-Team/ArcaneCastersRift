@@ -1,0 +1,48 @@
+{
+ "cell": [
+  165,
+  150
+ ],
+ "pivot": [
+  0.5,
+  0.0533
+ ],
+ "names": [
+  "base",
+  "windup"
+ ],
+ "frames": {
+  "base": {
+   "height": 110,
+   "width": 146,
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 1.0,
+   "height_ratio": 1.0,
+   "source_box": [
+    49,
+    194,
+    828,
+    780
+   ]
+  },
+  "windup": {
+   "height": 134,
+   "width": 139,
+   "offset": [
+    6,
+    -24
+   ],
+   "overlap": null,
+   "height_ratio": 1.218,
+   "source_box": [
+    961,
+    97,
+    1704,
+    809
+   ]
+  }
+ }
+}

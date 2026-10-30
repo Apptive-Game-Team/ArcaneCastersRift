@@ -1,0 +1,9 @@
+Four seamless tileable ground textures for a top-down 2D game, square 1024x1024 canvas split into an invisible 2x2 grid of 512x512 cells, each cell completely filled edge to edge by its texture (no border, no gap, no frame between cells).
+CAMERA: straight orthographic top-down view of flat ground, no perspective, no horizon, no objects taller than ankle height, no shadows of trees.
+Top-left: lush short forest grass with tiny clover and very small scattered white and yellow flowers, medium green with soft yellow-green highlights, even density.
+Top-right: packed warm-ochre dirt footpath with fine pebbles and a few flat stones, even density, no tracks or edges.
+Bottom-left: shallow clear turquoise stream water seen from above, gentle ripples and a few smooth pebbles visible on the bed, even density.
+Bottom-right: old mossy grey flagstone floor of a forest ruin, irregular stones with moss in the joints.
+Each texture must be uniform across its cell, with no focal point, no vignette and no lighting gradient, so it tiles without visible seams.
+ART STYLE (must match exactly across the whole game): hand-painted 2D fantasy RPG game art. Clean dark brown ink outline of even weight around every shape. Cel shading with two or three flat value bands per material, plus a light painterly texture inside the shapes. Warm sunlight from the upper left, so lit faces point up-left and shadow sides face down-right. Natural, saturated forest palette. Shapes must stay readable when shrunk to 100 pixels tall. Not pixel art, not 3D render, not photo, not chibi.
+No text, no labels, no UI, no watermark.

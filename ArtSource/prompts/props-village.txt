@@ -1,0 +1,9 @@
+Environment prop sheet for a top-down action RPG: a village of living stone creatures on rocky hills, square 1024x1024 canvas.
+The ENTIRE background is one perfectly flat solid color: pure magenta, RGB(255,0,255), hex #FF00FF. No gradient, no texture, no floor, no ground shadow, no vignette, no border lines, no grid lines. Do NOT use magenta, pink or purple anywhere on the subjects.
+CAMERA: classic top-down action RPG three-quarter view. The camera looks down at about 40 degrees: we see the top of the head and shoulders and the front of the body, and the ground plane is foreshortened. Every figure stands upright with its feet touching an invisible ground line.
+LAYOUT: an invisible 3x3 grid of cells (about 341x341 pixels each). One object per cell, centered, resting on the bottom of its cell area, at least 25 pixels of empty background around each. Objects never touch or cross cell borders. One consistent world scale (a person would be about 300 pixels tall).
+Row 1: (1) a round hut made of stacked flat stones with a moss roof and a low dark doorway; (2) a tall balanced stone cairn; (3) a ring of small smooth round play stones on a patch of sand, seen from above.
+Row 2: (4) a pile of cut quarry stone blocks; (5) a simple wooden rack holding stone hammers and chisels; (6) a small spring pool edged with mossy stones.
+Row 3: (7) a tall grey rock outcrop with moss on top; (8) a wide low boulder ridge; (9) a cliff face of layered grey rock with a dark cave mouth at its base.
+ART STYLE: hand-painted 2D fantasy RPG game art matching a painterly forest set: clean dark brown ink outline, cel shading with two or three flat value bands, light painterly texture inside shapes, warm sunlight from the upper left, natural colors (grey and tan stone, green moss, warm wood). Not pixel art, not 3D render.
+No text, no letters, no numbers, no labels, no UI, no frame, no watermark, no cast shadow on the ground (the game draws its own shadow).

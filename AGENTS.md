@@ -71,9 +71,7 @@ guidance:
   missing-reference errors at runtime.
 - **Editing `.unity` / `.prefab` YAML by hand is allowed but must be verified.**
   After editing, confirm no `fileID` in the file points at a removed object.
-- **`Assets/GyeMong_Art` is a Git submodule** (`Apptive-Game-Team/GyeMong_Art`).
-  Art and audio changes belong in that repository; the main repository only
-  records the pinned commit. Always check out with `--recurse-submodules`.
+- **Art is tracked directly in this repository.** `Assets/GyeMong_Art` preserves legacy files and GUIDs; new Arcane Casters art belongs in `Assets/ArcaneCasters/Art`. Commit art and its `.meta` siblings here. Do not create an art submodule.
 - Assembly definitions exist only inside third-party packages. Project scripts
   compile into the default assembly, so deleting a script that siblings
   reference breaks the whole compile.

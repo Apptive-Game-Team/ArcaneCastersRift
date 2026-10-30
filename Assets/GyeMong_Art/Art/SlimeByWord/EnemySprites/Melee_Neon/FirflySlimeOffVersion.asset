@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 796933e8250b4aceb997100b0402156f, type: 3}
+  m_Name: FirflySlimeOffVersion
+  m_EditorClassIdentifier: 
+  idleSprites:
+  - {fileID: 21300000, guid: 6734b84f01a9344aaae9e53a8b186d98, type: 3}
+  - {fileID: 21300000, guid: a45b5293c1afa42e4aed5e0d538ada41, type: 3}
+  rangedAttackSprites: []
+  meleeAttackSprites:
+  - {fileID: 21300000, guid: 751854eb0249743b189746d02a9a4585, type: 3}
+  - {fileID: 21300000, guid: 3483737e7701b4c7f936e40e12cbe2a8, type: 3}
+  - {fileID: 21300000, guid: b84104ff91adf499aabc41310b1a0711, type: 3}
+  - {fileID: 21300000, guid: 3483737e7701b4c7f936e40e12cbe2a8, type: 3}
+  dieSprites:
+  - {fileID: 21300000, guid: b39cf622ac1fe4558a064e9335d738ac, type: 3}
+  - {fileID: 21300000, guid: c7d7f86e71faa4f1c8e9a9b5c978c9d3, type: 3}

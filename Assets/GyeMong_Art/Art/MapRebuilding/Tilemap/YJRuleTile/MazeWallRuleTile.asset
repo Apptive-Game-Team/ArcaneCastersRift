@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c35c9d32ada67904a869e3adf5819b43, type: 3}
+  m_Name: MazeWallRuleTile
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 0}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 1
+  m_TilingRules: []
+  singleTile:
+  - {fileID: 11400000, guid: 8e7510abeb3214ba4951d62676b8cb46, type: 2}
+  horizontalLeftTile:
+  - {fileID: 11400000, guid: ede87a5d8ebcb4ab1a5ddf8ebc0ed347, type: 2}
+  horizontalRightTile:
+  - {fileID: 11400000, guid: 78b79ea177d0048e48781ab87366725d, type: 2}
+  verticalBottomTile:
+  - {fileID: 11400000, guid: cab0a0273c0bf4acc8cc1315660a4154, type: 2}
+  verticalTopTile:
+  - {fileID: 11400000, guid: 5f780885bf80d4b8fbed2a2b59e0b859, type: 2}
